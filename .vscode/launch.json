@@ -1,0 +1,36 @@
+/*
+ * Filename: /home/julesimf/source/Ded 3/JIMP/.vscode/launch.json
+ * Path: /home/julesimf/source/Ded 3/JIMP/.vscode
+ * Created Date: Sunday, October 17th 2021, 10:41:03 pm
+ * Author: JulesIMF
+ * 
+ * Copyright (c) 2021 Your Company
+ */
+{
+    // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
+    // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
+    // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "g++ - Сборка и отладка активного файла",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/jimp",
+            "args": ["debug/table.bmp"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Включить автоматическое форматирование для gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}
