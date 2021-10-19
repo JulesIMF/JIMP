@@ -71,7 +71,9 @@ namespace JIMP
         virtual void applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight) override;
     
     private:
-        inline void walkAndSet(JG::Color oldColor, int x, int y, std::queue<JG::Vector2i>& pointsQueue);
+        inline void walkAndSet(JG::Color** image, JG::Color oldColor, JG::Vector2i point, 
+                               std::queue<JG::Vector2i>& pointsQueue,
+                               int canvasWidth, int canvasHeight);
     };
 }
 

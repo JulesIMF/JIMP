@@ -4,7 +4,7 @@
 
 ## What is that?
 JIMP is very simple (and yet useless) graphics editor - you even can`t save somthing now :( 
-But it already has a canvas, a palette, many layers and two instruments - brush and eraser.
+But it already has a canvas, a palette, many layers and three instruments - brush, eraser and fill.
 
 ## How to use?
 When you open the app, you see two panels - canvas panel and palette panel. You can drag them, but cannot resize.

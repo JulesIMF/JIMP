@@ -78,9 +78,9 @@ Palette::PaletteSquare::PaletteSquare(JG::Window* window, int beginX, int beginY
 void Palette::PaletteSquare::updateKeyColor(JG::Color color)
 {
     this->keyColor = color;
-    calcBlt();
     this->color = calcColor(positionX, positionY);
     palette->updateColor(color);
+    calcBlt();
 }
 
 JG::Color Palette::PaletteSquare::calcColor(double positionX, double positionY)

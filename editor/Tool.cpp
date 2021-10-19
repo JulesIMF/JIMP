@@ -26,6 +26,7 @@ Revision History:
 #include <cmath>
 #include <editor/Editor.h>
 #include <editor/Tool.h>
+#include <common/messages.h>
 
 //
 // Defines
@@ -95,9 +96,50 @@ void Eraser::applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight
 
 }
 
+inline void Fill::walkAndSet(JG::Color** image, JG::Color oldColor, JG::Vector2i point, 
+                             std::queue<JG::Vector2i>& pointsQueue, 
+                             int canvasWidth, int canvasHeight)
+{
+    int x = point.x, y = point.y;
+    // debugMessage("process (%d, %d)", x, y);
+    if (x - 1 >= 0 && image[x - 1][y] == oldColor && image[x - 1][y] != color)
+    {
+        image[x - 1][y] = color;
+        pointsQueue.push({x - 1, y});
+    }
+
+    if (x + 1 < canvasWidth && image[x + 1][y] == oldColor && image[x + 1][y] != color)
+    {
+        image[x + 1][y] = color;
+        pointsQueue.push({ x + 1, y });
+    }
+
+    if (y - 1 >= 0 && image[x][y - 1] == oldColor && image[x][y - 1] != color)
+    {
+        image[x][y - 1] = color;
+        pointsQueue.push({ x, y - 1 });
+    }
+
+    if (y + 1 < canvasHeight && image[x][y + 1] == oldColor && image[x][y + 1] != color)
+    {
+        image[x][y + 1] = color;
+        pointsQueue.push({ x, y + 1 });
+    }
+}
+
 void Fill::applyOnPress(JG::Color** image, int canvasWidth, int canvasHeight)
 {
+    std::queue<JG::Vector2i> pointsQueue;
+    auto oldColor = image[x][y];
+    image[x][y] = color;
 
+    walkAndSet(image, oldColor, { x, y }, pointsQueue, canvasWidth, canvasHeight);
+    while (!pointsQueue.empty())
+    {
+        walkAndSet(image, oldColor, pointsQueue.front(), pointsQueue, canvasWidth, canvasHeight);
+        pointsQueue.pop();
+    }
+    
 }
 
 void Fill::applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight)

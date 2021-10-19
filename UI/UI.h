@@ -206,6 +206,7 @@ namespace JIMP
 
                 toolPicker->insert(new Brush);
                 toolPicker->insert(new Eraser);
+                toolPicker->insert(new Fill);
 
                 layerSwitcher = new LayerSwitcher(editor);
 
