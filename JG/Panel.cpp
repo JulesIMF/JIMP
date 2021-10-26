@@ -45,7 +45,7 @@ void Panel::addChild(Widget* widget)
 
 void Panel::renderMyself(int shiftX, int shiftY)
 {
-    Color panelColor = { 92, 84, 84 }; // Серый
+    Color panelColor = { 0x2f, 0x2f, 0x2f }; // Серый
 
     Rectangle borderRectngle(shiftX + beginX - outline,    shiftY + beginY,
                              width + outline * 2,          height + outline);
@@ -89,7 +89,7 @@ Widget::HandlerResponce Panel::PanelBar::onMouseMoved(Event event)
 
 void Panel::PanelBar::renderMyself(int shiftX, int shiftY)
 {
-    Color panelColor = { 92, 84, 84 }; // Серый
+    Color panelColor = { 0x2f, 0x2f, 0x2f }; // Серый
     Rectangle rectangle(shiftX + beginX, shiftY + beginY,
                         width,           height);
         
@@ -101,10 +101,10 @@ void Panel::PanelBar::renderMyself(int shiftX, int shiftY)
         return;
     
     sf::Font font;
-    static char const* fontFileName = "JG/resources/fonts/CourierNew.ttf";
-    if (!font.loadFromFile(fontFileName))
+    
+    if (!font.loadFromFile(defaultFont))
     {
-        printf("Can`t load %s\n", fontFileName);
+        printf("Can`t load %s\n", defaultFont);
         return;
     }
 

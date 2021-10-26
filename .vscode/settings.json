@@ -60,5 +60,12 @@
         "condition_variable": "cpp",
         "set": "cpp",
         "mutex": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/julesimf/source/Ded 3/JIMP",
+            "binaryPath": "/home/julesimf/source/Ded 3/JIMP/jimp",
+            "binaryArgs": []
+        }
+    ]
 }

@@ -51,9 +51,9 @@ JG::Window::~Window()
     destroyEventPicker();
 }
 
-void JG::Window::beginDrawing()
+void JG::Window::beginDrawing(JG::Color color)
 {
-    window_.clear();
+    window_.clear(color);
 }
 
 

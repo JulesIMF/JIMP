@@ -24,6 +24,7 @@ Revision History:
 // Includes / usings
 //
 
+#include <cassert>
 #include <cmath>
 #include <JG.h>
 using namespace JG;
@@ -142,6 +143,62 @@ void Rectangle::move(int deltaX, int deltaY)
 {
     Shape::move(deltaX, deltaY);
     rectangle_.move({ (float)deltaX, (float)deltaY });
+}
+
+Image::Image(int x, int y, int width, int height, char const* textureName) : 
+    Shape{ x, y },
+    width(width),
+    height(height)
+{
+    if (!texture.loadFromFile(textureName))
+        throw std::runtime_error("cant find texture");       
+
+    sprite.setTexture(texture);
+    sprite.setTextureRect({textureX, textureY, width, height});
+}
+
+
+
+void Image::draw(Window& window) const
+{
+    sf::Transform transform;
+    transform.translate({(float)beginX, (float)beginY});
+    window.getSfWindow().draw(sprite, transform);
+}
+
+void Image::draw(Canvas& canvas) const
+{
+    canvas = canvas;
+    assert(!"Image::draw(Canvas&) not implemented!");
+}
+
+void Image::setPosition(int newX, int newY)
+{
+    Shape::setPosition(newX, newY);
+}
+
+void Image::setColor(Color color)
+{
+    Shape::setColor(color);
+}
+
+void Image::move(int deltaX, int deltaY)
+{
+    Shape::move(deltaX, deltaY);
+}
+
+void Image::moveTexture(int deltaX, int deltaY)
+{
+    textureX += deltaX;
+    textureY += deltaY;
+    sprite.setTextureRect({ textureX, textureY, width, height });
+}
+
+void Image::setTexturePosition(int newX, int newY)
+{
+    textureX = newX;
+    textureY = newY;
+    sprite.setTextureRect({ textureX, textureY, width, height });
 }
 
 #endif //!SFML_WRAPPER

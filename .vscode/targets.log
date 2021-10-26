@@ -1,0 +1,438 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Wed Oct 27 01:45:16 2021
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = cinnamon
+# default
+.SHELLFLAGS := -c
+# makefile (from 'makefile', line 35)
+OBJ = obj/
+# environment
+XDG_SESSION_CLASS = user
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+VSCODE_LOG_NATIVE = false
+# environment
+GTK3_MODULES = xapp-gtk3-module
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /home/julesimf/.Xauthority
+# environment
+GDMSESSION = cinnamon
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+CURDIR := /home/julesimf/source/Ded 3/JIMP
+# makefile
+SHELL = /bin/sh
+# environment
+GDM_LANG = ru
+# environment
+VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"fc3544b702ca8840be343393c42a9ca4.it","_translationsConfigFile":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it/tcf.json","_cacheRoot":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it","_resolvedLanguagePackCoreLocation":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it/6cba118ac49a1b88332f312a8f67186f7f3c1643","_corruptedFile":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it/corrupted.info","_languagePackSupport":true}
+# environment
+_ = /usr/share/code/code
+# makefile (from 'makefile', line 34)
+CFLAGS = $(OPT) $(DEF) $(ASAN) -g $(INC)
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-cinnamon:/etc/xdg
+# environment
+GTK_OVERLAY_SCROLLING = 1
+# makefile (from 'makefile', line 1)
+MAKEFILE_LIST :=  makefile
+# automatic
+@F = $(notdir $@)
+# environment
+GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+MANDATORY_PATH = /usr/share/gconf/cinnamon.mandatory.path
+# environment
+XDG_DATA_DIRS = /usr/share/cinnamon:/usr/share/gnome:/home/julesimf/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+CLUTTER_IM_MODULE = ibus
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /home/julesimf
+# environment
+PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /home/julesimf/.local/bin:/home/julesimf/source/linux/tools/gcc-11.1.0-nolibc/x86_64-linux/bin:/home/julesimf/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
+KERNEL_IMG = /home/julesimf/source/linux/build/linux/arch/x86_64/boot/bzImage
+# makefile (from 'makefile', line 31)
+SFML = -lsfml-graphics -lsfml-window -lsfml-system
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+SESSION_MANAGER = local/julesimf-laptop:@/tmp/.ICE-unix/1236,unix/julesimf-laptop:/tmp/.ICE-unix/1236
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+ROOT = /home/julesimf/source/linux
+# environment
+SSHKEY = /home/julesimf/source/linux/tests/syzkaler-repros/id_rsa
+# environment
+VSCODE_LOG_STACK = false
+# environment
+VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=6a2ab744-8e42-4e77-b7ad-e93b0d49d913&iid=6a2ab744-8e42-4e77-b7ad-e93b0d49d913&sid=6a2ab744-8e42-4e77-b7ad-e93b0d49d913","uploadToServer":true}
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/julesimf
+# environment
+LS_COLORS = 
+# environment
+XDG_SESSION_DESKTOP = cinnamon
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# environment
+GIO_LAUNCHED_DESKTOP_FILE_PID = 5013
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# makefile (from 'makefile', line 32)
+OPT = -O2
+# environment
+GTK_IM_MODULE = ibus
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /home/julesimf/source/Ded 3/JIMP
+# environment
+QT_QPA_PLATFORMTHEME = qt5ct
+# default
+.LOADED := 
+# environment
+XDG_SEAT = seat0
+# environment
+SSH_AGENT_PID = 1312
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = X-Cinnamon
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+HOME = /home/julesimf
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+VSCODE_CODE_CACHE_PATH = /home/julesimf/.config/Code/CachedData/6cba118ac49a1b88332f312a8f67186f7f3c1643
+# environment
+LOGNAME = julesimf
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# makefile (from 'makefile', line 33)
+DEF = -DNDEBUG
+# environment
+MATHEMATICA_HOME = /usr/local/Wolfram/WolframAlphaNotebook/12.2
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+MAKE_VERSION := 4.2.1
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+XDG_VTNR = 7
+# environment
+MAKELEVEL := 0
+# makefile (from 'makefile', line 26)
+ASAN = 
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+QT_IM_MODULE = ibus
+# environment
+SHLVL = 0
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3f91d0d0-4a54-4598-91cf-845583d3d70f.sock
+# environment
+XDG_SESSION_ID = c2
+# environment
+USER = julesimf
+# makefile
+.DEFAULT_GOAL := jimp
+# environment
+XDG_CURRENT_DESKTOP = X-Cinnamon
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := make
+# makefile (from 'makefile', line 30)
+INC = -Iincludes -IJG/includes
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+LANGUAGE = ru
+# environment
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-f9d9150e-1.61.2-main.sock
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+BREAKPAD_DUMP_LOCATION = /home/julesimf/.config/Code/exthost Crash Reports
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+GDK_BACKEND = x11
+# automatic
++F = $(notdir $+)
+# environment
+CINNAMON_VERSION = 4.8.6
+# environment
+QT_ACCESSIBILITY = 1
+# environment
+DEFAULTS_PATH = /usr/share/gconf/cinnamon.default.path
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# makefile (from 'makefile', line 29)
+CXX = g++ -std=c++17
+# environment
+LC_ALL = C
+# environment
+LSFML = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+# environment
+QT4_IM_MODULE = ibus
+# environment
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GJS_DEBUG_OUTPUT = stderr
+# default
+.RECIPEPREFIX := 
+# environment
+LANG = C
+# environment
+VSCODE_PID = 5013
+# makefile (from 'makefile', line 37)
+FILES = $(OBJ)main.o $(OBJ)common/messages.o $(OBJ)common/colors.o $(OBJ)editor/Editor.o $(OBJ)editor/Palette.o $(OBJ)editor/Tool.o $(OBJ)editor/ToolPicker.o $(OBJ)editor/LayerSwitcher.o $(OBJ)editor/Layer.o $(OBJ)file/BMP.o
+# variable set hash-table stats:
+# Load=123/1024=12%, Rehash=0, Collisions=22/160=14%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 66311, inode 4128792): 21 files, 2 impossibilities.
+
+# 21 files, 2 impossibilities in 1 directories.
+
+# Implicit Rules
+
+obj/%.o: %.cpp
+#  recipe to execute (from 'makefile', line 68):
+	$(CXX) $(CFLAGS) $^ -c
+	mkdir -p $(@D)
+	mv $(@F) $@
+
+%: %.cpp
+#  recipe to execute (from 'makefile', line 80):
+	(make obj/$@.o;)
+
+# 2 implicit rules, 0 (0.0%) terminal.
+ 
+
+# Files
+
+# Not a target:
+obj/editor/ToolPicker.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+UI/UI.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+JG/libJG.a:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 57):
+	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make $@)
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+obj/file/BMP.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/editor/LayerSwitcher.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+jimp: obj/main.o obj/common/messages.o obj/common/colors.o obj/editor/Editor.o obj/editor/Palette.o obj/editor/Tool.o obj/editor/ToolPicker.o obj/editor/LayerSwitcher.o obj/editor/Layer.o obj/file/BMP.o JG/libJG.a
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 53):
+	$(CXX) $(CFLAGS) $(FILES) JG/libJG.a -pthread $(SFML) -lX11 -o $@
+
+obj/main.o: main.cpp UI/UI.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 63):
+	$(CXX) $(CFLAGS) main.cpp -c
+	mkdir -p $(@D)
+	mv $(@F) $@
+
+# Not a target:
+obj/editor/Palette.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/editor/Editor.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  Last modified 2021-10-25 21:10:26.509841027
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+obj/common/messages.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+main.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/editor/Tool.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/editor/Layer.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+lib:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 60):
+	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make JG/libJG.a)
+
+clean-there:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 73):
+	rm $(FILES)
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/common/colors.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 76):
+	(make clean-there)
+	(cd JG; make clean)
+
+# files hash-table stats:
+# Load=21/1024=2%, Rehash=0, Collisions=0/50=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 46 / storage = 485 B / avg = 10 B
+# current buf: size = 8162 B / used = 485 B / count = 46 / avg = 10 B
+
+# strcache performance: lookups = 65 / hit rate = 29%
+# hash-table stats:
+# Load=46/8192=1%, Rehash=0, Collisions=1/65=2%
+# Finished Make data base on Wed Oct 27 01:45:16 2021
+
+ 

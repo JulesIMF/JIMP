@@ -55,7 +55,7 @@ namespace JG
         Window(int sizeX, int sizeY, char const* title, int style);
         ~Window();
 
-        void beginDrawing();
+        void beginDrawing(JG::Color color = {0, 0, 0});
         void endDrawing();
         void close();
 

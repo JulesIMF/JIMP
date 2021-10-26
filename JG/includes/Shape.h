@@ -110,6 +110,28 @@ namespace JG
         void validateSF();
     #endif
     };
+
+    struct Image : public Shape
+    {
+    public:
+        Image(int x, int y, int width, int height, char const* textureName);
+        virtual void draw(Window& window) const override;
+        virtual void draw(Canvas& canvas) const override;
+        virtual void setPosition(int newX, int newY) override;
+        virtual void setColor(Color color) override;
+        virtual void move(int deltaX, int deltaY);
+
+        virtual void setTexturePosition(int newX, int newY);
+        virtual void moveTexture(int deltaX, int deltaY);
+
+    protected:
+    #ifdef SFML_WRAPPER
+        sf::Texture texture;
+        sf::Sprite sprite;
+        int width, height;
+        int textureX = 0, textureY = 0;
+    #endif
+    };
 }
 
 #endif // !SHAPE_JULESIMF

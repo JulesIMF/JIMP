@@ -41,6 +41,9 @@ namespace JIMP
         ToolPicker* toolPicker = nullptr;
         LayerSwitcher* layerSwitcher = nullptr;
 
+        JIMP::BMP bmp;
+        char const* filename = nullptr;
+
         class EditorCanvas : public JG::Canvas
         {
         public:
@@ -70,8 +73,9 @@ namespace JIMP
                 if (layer == nullptr)
                     return;
 
-                tool->x = x - layer->beginX;
-                tool->y = y - layer->beginY;
+                tool->x = x - layer->beginX - editor->shiftX;
+                tool->y = y - layer->beginY - editor->shiftY;
+
                 if (onMove)
                     tool->applyOnMove(layer->image, layer->width, layer->height);
 
@@ -159,6 +163,7 @@ namespace JIMP
 
                         editor->mix(layerSwitcher->getLayerVector());
                         window->sendEvent(JG::Event::PaintEvent());
+
                         break;
                     
                     case JG::Keyboard::PageUp:
@@ -170,6 +175,7 @@ namespace JIMP
 
                         editor->mix(layerSwitcher->getLayerVector());
                         window->sendEvent(JG::Event::PaintEvent());
+
                         break;
 
                     default:
@@ -181,7 +187,7 @@ namespace JIMP
         };
 
         static int const windowWidth  = 1600, windowHeight  = 900;
-        static int const editorWidth  = 800,  editorHeight = 600;
+        static int const editorWidth  = 1000,  editorHeight = 750;
         static int const paletteWidth = 350,  paletteHeight = 300;
 
 
@@ -218,6 +224,13 @@ namespace JIMP
 
                 editorCanvasPanel->caption = "Editor canvas";
                 editorCanvasPanel->addChild(editorCanvas = new EditorCanvas(this, 0, 0, editorWidth, editorHeight));
+            }
+
+            virtual void renderMyself(int shiftX, int shiftY)
+            {
+                JG::Rectangle rect(0, 0, width, height);
+                rect.setColor({255, 255, 255});
+                rect.draw(*this);
             }
         };
     }

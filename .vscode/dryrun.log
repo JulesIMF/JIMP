@@ -1,0 +1,36 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/julesimf/source/Ded 3/JIMP'
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes main.cpp -c
+mkdir -p obj
+mv main.o obj/main.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes common/messages.cpp -c
+mkdir -p obj/common
+mv messages.o obj/common/messages.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes common/colors.cpp -c
+mkdir -p obj/common
+mv colors.o obj/common/colors.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/Editor.cpp -c
+mkdir -p obj/editor
+mv Editor.o obj/editor/Editor.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/Palette.cpp -c
+mkdir -p obj/editor
+mv Palette.o obj/editor/Palette.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/Tool.cpp -c
+mkdir -p obj/editor
+mv Tool.o obj/editor/Tool.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/ToolPicker.cpp -c
+mkdir -p obj/editor
+mv ToolPicker.o obj/editor/ToolPicker.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/LayerSwitcher.cpp -c
+mkdir -p obj/editor
+mv LayerSwitcher.o obj/editor/LayerSwitcher.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/Layer.cpp -c
+mkdir -p obj/editor
+mv Layer.o obj/editor/Layer.o
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes file/BMP.cpp -c
+mkdir -p obj/file
+mv BMP.o obj/file/BMP.o
+(cd JG; OPT=-O2 ASAN= make JG/libJG.a)
+g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes obj/main.o obj/common/messages.o obj/common/colors.o obj/editor/Editor.o obj/editor/Palette.o obj/editor/Tool.o obj/editor/ToolPicker.o obj/editor/LayerSwitcher.o obj/editor/Layer.o obj/file/BMP.o JG/libJG.a -pthread -lsfml-graphics -lsfml-window -lsfml-system -lX11 -o jimp
+make: Leaving directory '/home/julesimf/source/Ded 3/JIMP'
+ 

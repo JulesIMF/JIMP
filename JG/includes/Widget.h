@@ -43,6 +43,7 @@ Revision History:
 
 namespace JG
 {
+    extern char const* defaultFont;
     class Window;
 
     enum WidgetType

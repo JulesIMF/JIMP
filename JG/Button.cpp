@@ -142,10 +142,10 @@ void Button::renderMyself(int shiftX, int shiftY)
         return;
 
     sf::Font font;
-    static char const* fontFileName = "JG/resources/fonts/CourierNew.ttf";
-    if (!font.loadFromFile(fontFileName))
+
+    if (!font.loadFromFile(defaultFont))
     {
-        printf("Can`t load %s\n", fontFileName);
+        printf("Can`t load %s\n", defaultFont);
         return;
     }
 

@@ -33,6 +33,8 @@ using namespace JG;
 // Defines
 //
 
+char const* JG::defaultFont = "JG/resources/fonts/DroidSansMonoBold.ttf"; 
+
 #define PROCESS_CHILD_RESPONCE(action)                      \
 switch (action)                                             \
 {                                                           \

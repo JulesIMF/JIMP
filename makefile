@@ -56,6 +56,9 @@ jimp: $(FILES) JG/libJG.a
 JG/libJG.a: 
 	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make $@)
 
+lib:
+	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make JG/libJG.a)
+
 obj/main.o: main.cpp UI/UI.h
 	$(CXX) $(CFLAGS) main.cpp -c
 	mkdir -p $(@D)

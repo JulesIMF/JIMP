@@ -25,6 +25,7 @@ Revision History:
 // Includes / usings
 //
 
+#include <unordered_set>
 #include <vector>
 #include <deque>
 #include <editor/Layer.h>
@@ -47,6 +48,7 @@ namespace JIMP
 
         int width, height;
         int shiftX = 0, shiftY = 0;
+        
     protected:
         Tool* tool = nullptr;
         JG::Color** image;
