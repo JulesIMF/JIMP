@@ -58,8 +58,8 @@ void Palette::updateColor(JG::Color color)
 
 void Palette::renderMyself(int shiftX, int shiftY)
 {
-    JG::Rectangle currentColorRect(shiftX + width - space - PalettePanel::panelWidth, 
-                                   shiftY + space * 3 + width - 4 * space - 2 * PalettePanel::panelWidth,
+    JG::Rectangle currentColorRect(shiftX + width - space - PalettePanel::panelWidth,
+                                   shiftY + beginY + height - space - PalettePanel::panelWidth,
                                    PalettePanel::panelWidth,
                                    PalettePanel::panelWidth);
 
@@ -143,7 +143,8 @@ JG::Widget::HandlerResponce Palette::PaletteSquare::onMouseButtonPressed(JG::Eve
     palette->updateColor(color);
 
     calcBlt();
-    return Widget::onMouseButtonPressed(event);
+    Widget::onMouseButtonPressed(event);
+    return HandlerResponce::Success;
 }
 
 JG::Widget::HandlerResponce Palette::PaletteSquare::onMouseMoved(JG::Event event)
@@ -163,7 +164,8 @@ JG::Widget::HandlerResponce Palette::PaletteSquare::onMouseMoved(JG::Event event
     palette->updateColor(color);
 
     calcBlt();
-    return Widget::onMouseMoved(event);
+    Widget::onMouseMoved(event);
+    return HandlerResponce::Success;
 }
 
 Palette::PalettePanel::PalettePanel(JG::Window* window, int beginX, int beginY,
@@ -221,7 +223,8 @@ JG::Widget::HandlerResponce Palette::PalettePanel::onMouseButtonPressed(JG::Even
     paletteSquare->updateKeyColor(keyColor);
 
     calcBlt();
-    return Widget::onMouseButtonPressed(event);
+    Widget::onMouseButtonPressed(event);
+    return HandlerResponce::Success;
 }
 JG::Widget::HandlerResponce Palette::PalettePanel::onMouseMoved(JG::Event event)
 {
@@ -239,5 +242,6 @@ JG::Widget::HandlerResponce Palette::PalettePanel::onMouseMoved(JG::Event event)
     paletteSquare->updateKeyColor(keyColor);
 
     calcBlt();
-    return Widget::onMouseMoved(event);
+    Widget::onMouseMoved(event);
+    return HandlerResponce::Success;
 }

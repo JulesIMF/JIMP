@@ -237,6 +237,7 @@ namespace JG
             Panel* panel;
         };
 
+        virtual HandlerResponce onMouseButtonPressed(Event event) override;
         virtual void addChild(Widget* widget) override;
         virtual void renderMyself(int shiftX, int shiftY) override;
         char const* caption = nullptr;

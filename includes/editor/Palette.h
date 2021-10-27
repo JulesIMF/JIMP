@@ -85,7 +85,7 @@ namespace JIMP
 
         void updateColor(JG::Color color);
         virtual void renderMyself(int shiftX, int shiftY);
-
+        
         Palette(JG::Window* window, int beginX, int beginY,
                 int width, int height, ToolPicker* toolPicker);
 

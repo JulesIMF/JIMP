@@ -148,7 +148,9 @@ void Rectangle::move(int deltaX, int deltaY)
 Image::Image(int x, int y, int width, int height, char const* textureName) : 
     Shape{ x, y },
     width(width),
-    height(height)
+    height(height), 
+    virtualWidth(width),
+    virtualHeight(height)
 {
     if (!texture.loadFromFile(textureName))
         throw std::runtime_error("cant find texture");       
@@ -199,6 +201,14 @@ void Image::setTexturePosition(int newX, int newY)
     textureX = newX;
     textureY = newY;
     sprite.setTextureRect({ textureX, textureY, width, height });
+}
+
+void Image::scale(int virtualWidth, int virtualHeight)
+{
+    this->virtualWidth = virtualWidth;
+    this->virtualHeight = virtualHeight;
+    sprite.scale((float)virtualWidth  / (float)width,
+                 (float)virtualHeight / (float)height);
 }
 
 #endif //!SFML_WRAPPER

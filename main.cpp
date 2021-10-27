@@ -80,7 +80,7 @@ int main(int argc, char const** argv)
     JIMP::UI::layerSwitcher->addLayer(JIMP::UI::editorWidth, JIMP::UI::editorHeight);
     JIMP::UI::layerSwitcher->nextLayer();
 
-    JIMP::UI::editor->mix(JIMP::UI::layerSwitcher->getLayerVector());
+    JIMP::UI::mainEditorCanvasPanel->editorCanvas->editor->mix(JIMP::UI::layerSwitcher->getLayerVector());
     window.sendEvent(JG::Event::PaintEvent());
 
     JG::Event event = {};

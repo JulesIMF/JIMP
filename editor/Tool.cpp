@@ -65,6 +65,11 @@ void Brush::applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight)
 
 }
 
+char const* Brush::getName()
+{
+    return "Brush";
+}
+
 void Eraser::applyOnPress(JG::Color** image, int canvasWidth, int canvasHeight)
 {
     if (image == nullptr)
@@ -94,6 +99,11 @@ void Eraser::applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight)
 void Eraser::applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight)
 {
 
+}
+
+char const* Eraser::getName()
+{
+    return "Eraser";
 }
 
 inline void Fill::walkAndSet(JG::Color** image, JG::Color oldColor, JG::Vector2i point, 
@@ -150,4 +160,9 @@ void Fill::applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight)
 void Fill::applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight)
 {
 
+}
+
+char const* Fill::getName()
+{
+    return "Fill";
 }

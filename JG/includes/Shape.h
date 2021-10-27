@@ -123,6 +123,7 @@ namespace JG
 
         virtual void setTexturePosition(int newX, int newY);
         virtual void moveTexture(int deltaX, int deltaY);
+        virtual void scale(int virtualWidth, int virtualHeight);
 
     protected:
     #ifdef SFML_WRAPPER
@@ -130,6 +131,7 @@ namespace JG
         sf::Sprite sprite;
         int width, height;
         int textureX = 0, textureY = 0;
+        int virtualWidth, virtualHeight;
     #endif
     };
 }

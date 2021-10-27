@@ -76,12 +76,17 @@ Panel::PanelBar::PanelBar(Window* window, Panel* panel, int beginX, int beginY, 
 
 Widget::HandlerResponce Panel::PanelBar::onMouseMoved(Event event)
 {
-    if (!mousePressed)
-        return HandlerResponce::SuccessYield;
+    HandlerResponce childrenResponce;
+    if ((childrenResponce = Widget::onMouseMoved(event)) == 
+        HandlerResponce::SuccessCapture || !mousePressed)
+    {
+        return childrenResponce;
+    }
     
     window->setActive(panel);
     panel->beginX += event.mouseMove.dx;
     panel->beginY += event.mouseMove.dy;
+
     window->sendEvent(Event::PaintEvent());
 
     return HandlerResponce::Success;
@@ -158,6 +163,12 @@ void Panel::PanelBar::PanelCloseButton::renderMyself(int shiftX, int shiftY)
         };
         window->getSfWindow().draw(cross, 2, sf::Points);
     }
+}
+
+Widget::HandlerResponce Panel::onMouseButtonPressed(Event event)
+{
+    Widget::onMouseButtonPressed(event);
+    return HandlerResponce::Success;
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"

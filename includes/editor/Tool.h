@@ -41,6 +41,7 @@ namespace JIMP
         virtual void applyOnPress(JG::Color** image, int canvasWidth, int canvasHeight) = 0;
         virtual void applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight) = 0;
         virtual void applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight) = 0;
+        virtual char const* getName() = 0;
 
     protected:
         inline void savePrev();
@@ -53,6 +54,7 @@ namespace JIMP
         virtual void applyOnPress(JG::Color** image, int canvasWidth, int canvasHeight) override;
         virtual void applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight) override;
         virtual void applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight) override;
+        virtual char const* getName() override;
     };
 
     class Eraser : public Tool
@@ -61,6 +63,7 @@ namespace JIMP
         virtual void applyOnPress(JG::Color** image, int canvasWidth, int canvasHeight) override;
         virtual void applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight) override;
         virtual void applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight) override;
+        virtual char const* getName() override;
     };
 
     class Fill : public Tool
@@ -69,6 +72,7 @@ namespace JIMP
         virtual void applyOnPress(JG::Color** image, int canvasWidth, int canvasHeight) override;
         virtual void applyOnMove(JG::Color** image, int canvasWidth, int canvasHeight) override;
         virtual void applyOnRelease(JG::Color** image, int canvasWidth, int canvasHeight) override;
+        virtual char const* getName() override;
     
     private:
         inline void walkAndSet(JG::Color** image, JG::Color oldColor, JG::Vector2i point, 

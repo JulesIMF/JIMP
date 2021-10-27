@@ -45,6 +45,8 @@ FILES   = $(OBJ)main.o \
 		  $(OBJ)editor/Layer.o \
 		  $(OBJ)file/BMP.o
 
+UI		= UI/UI.h UI/Vista.h
+
 #
 # Rules
 #
@@ -59,7 +61,7 @@ JG/libJG.a:
 lib:
 	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make JG/libJG.a)
 
-obj/main.o: main.cpp UI/UI.h
+obj/main.o: main.cpp $(UI)
 	$(CXX) $(CFLAGS) main.cpp -c
 	mkdir -p $(@D)
 	mv $(@F) $@
