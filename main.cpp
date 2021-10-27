@@ -36,7 +36,7 @@ Revision History:
 //
 
 
-#define VERSION "alpha v1.2.2 (20 oct 2021)"
+#define VERSION "alpha v1.2.3 (27 oct 2021)"
 
 void displayInfo(void)
 {        
