@@ -14,7 +14,6 @@ mkdir -p obj/editor
 mv Editor.o obj/editor/Editor.o
 g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/Palette.cpp -c
 mkdir -p obj/editor
- 
 mv Palette.o obj/editor/Palette.o
 g++ -std=c++17 -O2 -DNDEBUG  -g -Iincludes -IJG/includes editor/Tool.cpp -c
 mkdir -p obj/editor

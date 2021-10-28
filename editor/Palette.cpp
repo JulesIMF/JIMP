@@ -25,6 +25,7 @@ Revision History:
 
 #include <cmath>
 #include <editor/Palette.h>
+#include <common/messages.h>
 
 //
 // Defines
@@ -58,10 +59,20 @@ void Palette::updateColor(JG::Color color)
 
 void Palette::renderMyself(int shiftX, int shiftY)
 {
-    JG::Rectangle currentColorRect(shiftX + width - space - PalettePanel::panelWidth,
-                                   shiftY + beginY + height - space - PalettePanel::panelWidth,
-                                   PalettePanel::panelWidth,
-                                   PalettePanel::panelWidth);
+    JG::Rectangle blackRect(shiftX + width - space - PalettePanel::panelWidth,
+                            shiftY + beginY + height - space - PalettePanel::panelWidth,
+                            PalettePanel::panelWidth,
+                            PalettePanel::panelWidth);
+
+    blackRect.setColor(JG::Color::Black);
+    blackRect.draw(*window);
+
+    static int const colorExampleSpace = 5;
+
+    JG::Rectangle currentColorRect(shiftX + width - space - PalettePanel::panelWidth + colorExampleSpace,
+                                   shiftY + beginY + height - space - PalettePanel::panelWidth + colorExampleSpace,
+                                   PalettePanel::panelWidth - 2 * colorExampleSpace,
+                                   PalettePanel::panelWidth - 2 * colorExampleSpace);
 
     currentColorRect.setColor(color);
     currentColorRect.draw(*window);
@@ -79,7 +90,7 @@ void Palette::PaletteSquare::updateKeyColor(JG::Color color)
 {
     this->keyColor = color;
     this->color = calcColor(positionX, positionY);
-    palette->updateColor(color);
+    palette->updateColor(this->color);
     calcBlt();
 }
 
@@ -124,6 +135,22 @@ void Palette::PaletteSquare::calcBlt()
                 continue;
                 
             setPixel(i, j, {0, 0, 0});
+        }
+
+    for (int radX = 0; radX <= smoothRadius; radX++)
+        for (int radY = 0; radY <= smoothRadius; radY++)
+        {
+            if (radX * radX + radY * radY < smoothRadius * smoothRadius)
+                continue;
+
+            static JG::Color const transparent = {0, 0, 0, 0};
+
+            setPixel(smoothRadius - radX,             smoothRadius - radY,          transparent);
+            setPixel(width - smoothRadius + radX - 1, smoothRadius - radY,          transparent);
+            setPixel(smoothRadius - radX,             height - smoothRadius + radY - 1, transparent);
+            setPixel(width - smoothRadius + radX - 1, height - smoothRadius + radY - 1, transparent);
+            
+            // debugMessage("set transparent on %d %d", radX, radY);
         }
 
     flush();
@@ -206,6 +233,22 @@ void Palette::PalettePanel::calcBlt()
     for (int i = 0; i != width; i++)
         for (int j = ySwitcher - radius; j <= ySwitcher + radius; j++)
             setPixel(i, j, { 0, 0, 0 });
+
+    for (int radX = 0; radX <= smoothRadius; radX++)
+        for (int radY = 0; radY <= smoothRadius; radY++)
+        {
+            if (radX * radX + radY * radY < smoothRadius * smoothRadius)
+                continue;
+
+            static JG::Color const transparent = { 0, 0, 0, 0 };
+
+            setPixel(smoothRadius - radX, smoothRadius - radY, transparent);
+            setPixel(width - smoothRadius + radX - 1, smoothRadius - radY, transparent);
+            setPixel(smoothRadius - radX, height - smoothRadius + radY - 1, transparent);
+            setPixel(width - smoothRadius + radX - 1, height - smoothRadius + radY - 1, transparent);
+
+            // debugMessage("set transparent on %d %d", radX, radY);
+        }
 
     flush();
 }

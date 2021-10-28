@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Oct 27 09:51:02 2021
+# Make data base, printed on Wed Oct 27 19:20:59 2021
 
 # Variables
 
@@ -113,7 +115,7 @@ XDG_SESSION_DESKTOP = cinnamon
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2458
+GIO_LAUNCHED_DESKTOP_FILE_PID = 42268
 # automatic
 %F = $(notdir $%)
 # environment
@@ -179,7 +181,7 @@ UI = UI/UI.h UI/Vista.h
 # environment
 SHLVL = 0
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3f9a4384-e637-4a5a-842c-3d8bf1e3b543.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9e84d2f1-dcc4-4e8e-9cbd-859da3ce2b50.sock
 # environment
 XDG_SESSION_ID = c2
 # environment
@@ -255,7 +257,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2458
+VSCODE_PID = 42268
 # makefile (from 'makefile', line 37)
 FILES = $(OBJ)main.o $(OBJ)common/messages.o $(OBJ)common/colors.o $(OBJ)editor/Editor.o $(OBJ)editor/Palette.o $(OBJ)editor/Tool.o $(OBJ)editor/ToolPicker.o $(OBJ)editor/LayerSwitcher.o $(OBJ)editor/Layer.o $(OBJ)file/BMP.o
 # variable set hash-table stats:
@@ -280,13 +282,11 @@ obj/%.o: %.cpp
 	mv $(@F) $@
 
 %: %.cpp
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 #  recipe to execute (from 'makefile', line 82):
 	(make obj/$@.o;)
 
 # 2 implicit rules, 0 (0.0%) terminal.
+ 
 
 # Files
 
@@ -359,7 +359,7 @@ obj/editor/Editor.o:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-10-27 01:25:36.023713654
+#  Last modified 2021-10-27 17:39:03.774459325
 #  File has been updated.
 #  Successfully updated.
 
@@ -441,6 +441,6 @@ UI/Vista.h:
 # strcache performance: lookups = 66 / hit rate = 28%
 # hash-table stats:
 # Load=47/8192=1%, Rehash=0, Collisions=1/66=2%
-# Finished Make data base on Wed Oct 27 09:51:02 2021
+# Finished Make data base on Wed Oct 27 19:20:59 2021
 
  

@@ -1,6 +1,6 @@
 ### JIMP - Jules Image Manipulation Program
 
-<img src="docs/images/JIMP alpha.png">
+<img src="docs/images/JIMP alpha 1-2-3.png">
 
 ## What is that?
 JIMP is very simple (and yet useless) graphics editor - you even can`t save somthing now :( 

@@ -36,6 +36,8 @@ namespace JIMP
     {
         static int const space = 20;
 
+        static int const smoothRadius = 10;
+
         struct PaletteSquare : public JG::Canvas
         {
             double positionX = 0, positionY = 0;
@@ -57,6 +59,7 @@ namespace JIMP
         {
             static int const panelWidth = 30;
             static int const nKnots = 7;
+            static int const smoothRadius = 5;
 
             JG::Color const knots[nKnots] =
             {
@@ -89,7 +92,7 @@ namespace JIMP
         Palette(JG::Window* window, int beginX, int beginY,
                 int width, int height, ToolPicker* toolPicker);
 
-        JG::Color color = { 255, 0, 0 };
+        JG::Color color = { 255, 255, 255 };
         PaletteSquare* paletteSquare;
         PalettePanel* palettePanel;
         ToolPicker* toolPicker;

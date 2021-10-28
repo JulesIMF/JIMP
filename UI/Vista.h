@@ -134,10 +134,7 @@ namespace JIMP
                         return;
                     }
 
-                    int charSize = 12;
-
-                    int const referenceChar = 'A';
-                    auto glyph = font.getGlyph(referenceChar, charSize, false);
+                    int charSize = 13;
 
                     sf::Text text;
                     text.setFont(font);
@@ -145,7 +142,7 @@ namespace JIMP
                     text.setCharacterSize(charSize);
                     text.setFillColor(JG::Color::Black);
 
-                    float textShiftY = ((float)height - glyph.bounds.height + 1) / 2.0;
+                    float textShiftY = ((float)height - text.getLocalBounds().height) / 2.0;
                     float textShiftX = VistaPanel::outline * 2;
 
                     text.move({ (float)beginX + (float)shiftX + textShiftX, (float)beginY + (float)shiftY + textShiftY });
@@ -231,7 +228,7 @@ namespace JIMP
                 float textWidth = localBounds.width;
                 float textHeight = localBounds.height;
                 float textShiftY = 0;
-                float textShiftX = ((float)width - textWidth) / 2.0;
+                float textShiftX = ((float)width - textWidth + 1) / 2.0;
 
                 text.move({ (float)beginX + (float)shiftX + textShiftX, (float)beginY + (float)shiftY + textShiftY });
                 window->getSfWindow().draw(text);
