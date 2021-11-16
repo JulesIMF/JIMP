@@ -84,8 +84,7 @@ Widget::HandlerResponce Panel::PanelBar::onMouseMoved(Event event)
     }
     
     window->setActive(panel);
-    panel->beginX += event.mouseMove.dx;
-    panel->beginY += event.mouseMove.dy;
+    panel->move(event.mouseMove.dx, event.mouseMove.dy);
 
     window->sendEvent(Event::PaintEvent());
 

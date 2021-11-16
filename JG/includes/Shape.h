@@ -119,16 +119,18 @@ namespace JG
         virtual void draw(Canvas& canvas) const override;
         virtual void setPosition(int newX, int newY) override;
         virtual void setColor(Color color) override;
-        virtual void move(int deltaX, int deltaY);
+        virtual void move(int deltaX, int deltaY) override;
 
         virtual void setTexturePosition(int newX, int newY);
         virtual void moveTexture(int deltaX, int deltaY);
         virtual void scale(int virtualWidth, int virtualHeight);
+        virtual Color getPixel(int x, int y);
 
     protected:
     #ifdef SFML_WRAPPER
         sf::Texture texture;
         sf::Sprite sprite;
+        sf::Image image;
         int width, height;
         int textureX = 0, textureY = 0;
         int virtualWidth, virtualHeight;

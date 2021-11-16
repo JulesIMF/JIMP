@@ -29,7 +29,7 @@ endif
 CXX	    = g++ -std=c++17
 INC	    = -Iincludes -IJG/includes
 SFML    = -lsfml-graphics -lsfml-window -lsfml-system
-OPT	    = -O2
+OPT	    = -O0
 DEF		= -DNDEBUG
 CFLAGS	= $(OPT) $(DEF) $(ASAN) -g $(INC)
 OBJ	    = obj/
@@ -45,7 +45,7 @@ FILES   = $(OBJ)main.o \
 		  $(OBJ)editor/Layer.o \
 		  $(OBJ)file/BMP.o
 
-UI		= UI/UI.h UI/Vista.h
+UI		= UI/UI.h UI/VistaButton.h UI/VistaPanel.h UI/VistaSlider.h UI/VistaTextBox.h
 
 #
 # Rules

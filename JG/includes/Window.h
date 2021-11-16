@@ -24,6 +24,7 @@ Revision History:
 #define WINDOW_JULESIMF
 #include <thread>
 #include <queue>
+#include <chrono>
 #include <__JGDebug.h>
 //
 // To turn SFML realization on, define the next macros:
@@ -72,10 +73,15 @@ namespace JG
 
         HandlerResponce onPaint(Event event);
         virtual void popActive();
+        long long timerTickIntervalMs = 100;
 
     protected:
         std::queue<Event> eventQueue;
         bool hasPaintEvent = false;
+        std::chrono::high_resolution_clock clock;
+        std::chrono::system_clock::time_point startTimer;
+        long long lastTickMs = 0;
+        
 
     private:
         // Event picker thread constantly picks events from this window

@@ -59,7 +59,8 @@
         "bitset": "cpp",
         "condition_variable": "cpp",
         "set": "cpp",
-        "mutex": "cpp"
+        "mutex": "cpp",
+        "*.txt": "c"
     },
     "makefile.launchConfigurations": [
         {

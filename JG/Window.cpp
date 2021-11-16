@@ -43,6 +43,7 @@ JG::Window::Window(int sizeX, int sizeY, char const* title, int style) :
     renderMyself(0, 0);
     endDrawing();
     beginDrawing();
+    startTimer = clock.now();
     window_.create({ (unsigned)sizeX, (unsigned)sizeY }, title, style);
 }
 
@@ -84,6 +85,18 @@ void JG::Window::eventPicker(JG::Window& window)
 {
     while (window.isAlive)
     {
+        long long tickMs = std::chrono::duration_cast<std::chrono::milliseconds>(window.clock.now() - window.startTimer).count();
+        if (tickMs - window.lastTickMs >= window.timerTickIntervalMs)
+        {
+            JG::Event eventTimer;
+            eventTimer.type = JG::Event::Timer;
+            eventTimer.timer = { .timeMs = tickMs,
+                                 .passedMs = tickMs - window.lastTickMs };
+
+            window.sendEvent(eventTimer);
+            window.lastTickMs = tickMs;
+        }
+
         sf::Event sfEvent = {};
         bool pulled = window.window_.pollEvent(sfEvent);
 
@@ -110,6 +123,11 @@ void JG::Window::eventPicker(JG::Window& window)
                 .shift      = sfEvent.key.shift,
                 .system     = sfEvent.key.system
             };
+            break;
+
+        case sf::Event::MouseWheelScrolled:
+            event.type = JG::Event::MouseScrolled;
+            event.mouseWheel = { sfEvent.mouseWheelScroll.delta, sfEvent.mouseWheelScroll.x, sfEvent.mouseWheelScroll.y };
             break;
 
         case sf::Event::MouseMoved:
@@ -206,6 +224,10 @@ bool JG::Window::pollEvent(JG::Event& event)
 
     case Event::MouseLeft:
         window->onMouseLeft(event);
+        break;
+
+    case Event::Timer:
+        window->onTimer(event);
         break;
 
     default:

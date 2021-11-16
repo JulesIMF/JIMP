@@ -135,7 +135,7 @@ void Palette::PaletteSquare::calcBlt()
                 continue;
                 
             setPixel(i, j, {0, 0, 0});
-        }
+        }   
 
     for (int radX = 0; radX <= smoothRadius; radX++)
         for (int radY = 0; radY <= smoothRadius; radY++)

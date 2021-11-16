@@ -40,6 +40,13 @@ void ToolPicker::setColor(JG::Color color)
         tool->color = color;
 }
 
+void ToolPicker::setThickness(int thickness)
+{
+    // debugMessage("Set new color: (%d, %d, %d)", color.r, color.g, color.b);
+    for (auto tool : tools)
+        tool->thickness = thickness;
+}
+
 Tool* ToolPicker::getTool()
 {
     if (tools.empty())

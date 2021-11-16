@@ -151,9 +151,9 @@ Image::Image(int x, int y, int width, int height, char const* textureName) :
     height(height), 
     virtualWidth(width),
     virtualHeight(height)
-{
-    if (!texture.loadFromFile(textureName))
-        throw std::runtime_error("cant find texture");       
+{   
+    if (!image.loadFromFile(textureName) || !texture.loadFromImage(image))
+        throw std::runtime_error("cant find texture");   
 
     sprite.setTexture(texture);
     sprite.setTextureRect({textureX, textureY, width, height});
@@ -201,6 +201,7 @@ void Image::setTexturePosition(int newX, int newY)
     textureX = newX;
     textureY = newY;
     sprite.setTextureRect({ textureX, textureY, width, height });
+    
 }
 
 void Image::scale(int virtualWidth, int virtualHeight)
@@ -209,6 +210,11 @@ void Image::scale(int virtualWidth, int virtualHeight)
     this->virtualHeight = virtualHeight;
     sprite.scale((float)virtualWidth  / (float)width,
                  (float)virtualHeight / (float)height);
+}
+
+Color Image::getPixel(int x, int y)
+{
+    return image.getPixel(x + textureX, y + textureY);
 }
 
 #endif //!SFML_WRAPPER

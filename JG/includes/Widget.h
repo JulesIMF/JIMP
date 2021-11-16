@@ -123,11 +123,20 @@ namespace JG
         virtual HandlerResponce onMouseEntered(Event event);
 
         /**
+         * \brief Handler of "timer"
+         *
+         * \param event
+         */
+        virtual HandlerResponce onTimer(Event event);
+
+        /**
         *  \brief Handler of "mouse left"
         *
         *  \param event
         */
         virtual HandlerResponce onMouseLeft(Event event);
+
+        virtual bool checkHover(int x, int y);
 
         virtual void renderMyself(int shiftX, int shiftY);
         virtual void render(int shiftX, int shiftY);
@@ -137,11 +146,14 @@ namespace JG
         virtual void popActive();
         virtual void pushToEraseQueue(Widget* Widget);
         virtual void clearEraseQueue();
+        virtual void move(int deltaX, int deltaY);
+        virtual void setPosition(int newX, int newY);
 
     protected:
         std::vector<Widget*> children;
         std::queue<Widget*> deletedChildren;
         Widget* activeChild = nullptr;
+        bool isActive = false;
         bool mouseOn = false;
         bool mousePressed = false;
         Window* window;
@@ -182,7 +194,7 @@ namespace JG
     {
         Canvas(Window* window,
             int beginX, int beginY,
-            int width, int height);
+            int width,  int height);
 
         virtual ~Canvas();
         virtual void renderMyself(int shiftX, int shiftY) override;

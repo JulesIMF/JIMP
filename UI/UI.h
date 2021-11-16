@@ -57,10 +57,12 @@ namespace JIMP
 
         // Editor
 
-        class   EditorCanvas : public JG::Canvas
+        class EditorCanvas : public JG::Canvas
         {
         public:
             Editor* editor;
+
+            int toolX = 0, toolY = 0;
 
             EditorCanvas(JG::Window* window, int beginX, int beginY,
                                              int width, int height) : 
@@ -77,11 +79,18 @@ namespace JIMP
             {
                 transferFromBuffer(editor->getImage());
                 flush();
-                
+
                 Canvas::renderMyself(shiftX, shiftY);
+                toolPicker->getTool()->drawCursor(window,
+                                                  toolX,
+                                                  toolY,
+                                                  editorWidth, 
+                                                  editorHeight, 
+                                                  shiftX, 
+                                                  shiftY + VistaPanel::VistaPanelBar::vistaBarHeight);
             }
 
-            void applyTool(int x, int y, bool onMove) // true - applyOnMove, false - applyOnRelease
+            void moveTool(int x, int y, int dx, int dy)
             {
                 auto tool = toolPicker->getTool();
                 auto layer = layerSwitcher->getCurrentLayer();
@@ -89,14 +98,28 @@ namespace JIMP
                 if (layer == nullptr)
                     return;
 
+                tool->dx = dx;
+                tool->dy = dy;
+
+                toolX = x;
+                toolY = y;
+
                 tool->x = x - layer->beginX - editor->shiftX;
                 tool->y = y - layer->beginY - editor->shiftY;
+            }
+
+            void applyTool(int x, int y, int dx, int dy, bool onMove) // true - applyOnMove, false - applyOnRelease
+            {
+                moveTool(x, y, dx, dy);
+
+                auto tool = toolPicker->getTool();
+                auto layer = layerSwitcher->getCurrentLayer();
 
                 if (onMove)
-                    tool->applyOnMove(layer->image, layer->width, layer->height);
+                    tool->applyOnMove(*layer);
 
                 else
-                    tool->applyOnPress(layer->image, layer->width, layer->height);
+                    tool->applyOnPress(*layer);
 
                 editor->mix(layerSwitcher->getLayerVector());
                 window->sendEvent(JG::Event::PaintEvent());                
@@ -104,16 +127,17 @@ namespace JIMP
 
             virtual JG::Widget::HandlerResponce onMouseButtonPressed(JG::Event event) override
             {
-                applyTool(event.mouseButton.x, event.mouseButton.y, false);
+                applyTool(event.mouseButton.x, event.mouseButton.y, event.mouseMove.dx, event.mouseMove.dy, false);
                 return JG::Widget::HandlerResponce::Success;
             }
 
             virtual JG::Widget::HandlerResponce onMouseMoved(JG::Event event) override
             {
-                if (!mousePressed)
-                    return JG::Widget::HandlerResponce::Failure;
-                
-                applyTool(event.mouseMove.x, event.mouseMove.y, true);
+                if (mousePressed)                
+                    applyTool(event.mouseMove.x, event.mouseMove.y, event.mouseMove.dx, event.mouseMove.dy, true);
+                else
+                    moveTool(event.mouseMove.x, event.mouseMove.y, event.mouseMove.dx, event.mouseMove.dy);
+
                 return JG::Widget::HandlerResponce::Success;
             }
 
@@ -127,7 +151,7 @@ namespace JIMP
                             layerSwitcher->getCurrentLayer()->beginY -= deltaXY;
                         
                         else
-                            editor->shiftY -= deltaXY;
+                            editor->shiftY += deltaXY;
 
                         editor->mix(layerSwitcher->getLayerVector());
                         window->sendEvent(JG::Event::PaintEvent());
@@ -139,7 +163,7 @@ namespace JIMP
                             layerSwitcher->getCurrentLayer()->beginY += deltaXY;
 
                         else
-                            editor->shiftY += deltaXY;
+                            editor->shiftY -= deltaXY;
 
                         editor->mix(layerSwitcher->getLayerVector());
                         window->sendEvent(JG::Event::PaintEvent());
@@ -151,7 +175,7 @@ namespace JIMP
                             layerSwitcher->getCurrentLayer()->beginX -= deltaXY;
 
                         else
-                            editor->shiftX -= deltaXY;
+                            editor->shiftX += deltaXY;
 
                         editor->mix(layerSwitcher->getLayerVector());
                         window->sendEvent(JG::Event::PaintEvent());
@@ -163,7 +187,7 @@ namespace JIMP
                             layerSwitcher->getCurrentLayer()->beginX += deltaXY;
 
                         else
-                            editor->shiftX += deltaXY;
+                            editor->shiftX -= deltaXY;
 
                         editor->mix(layerSwitcher->getLayerVector());
                         window->sendEvent(JG::Event::PaintEvent());
@@ -195,7 +219,7 @@ namespace JIMP
                         break;
 
                     default:
-                        return JG::Widget::HandlerResponce::Failure;
+                        return JG::Widget::HandlerResponce::Success;
                 }
 
                 return JG::Widget::HandlerResponce::Success;
@@ -223,6 +247,67 @@ namespace JIMP
             static int nAdded;
             };
         
+        class Bublick : public JG::Panel
+        {
+        public:
+            static int const bublickWidth = 300, bublickHeight = 300;
+
+            class BublickBar : public JG::Panel::PanelBar
+            {
+            public:
+                static int const bbarWidth = 300, bbarHeight = 105;
+                BublickBar(JG::Window* window, Bublick* bublick, int beginX, int beginY) :
+                    JG::Panel::PanelBar(window, bublick, beginX, beginY, bbarWidth),
+                    barImage(0, 0, bbarWidth, bbarHeight, "UI/debug/bar.png")
+                {
+                    height = bbarHeight;
+                    auto button = children.at(0);
+                    button->setPosition((bbarWidth - JG::Panel::PanelBar::barHeight) / 2,
+                                        (bbarHeight - JG::Panel::PanelBar::barHeight) / 2);
+                }
+
+                virtual void renderMyself(int shiftX, int shiftY) override
+                {
+                    translateAndDraw(barImage, window, shiftX + beginX, shiftY + beginY);
+                }
+
+                virtual bool checkHover(int x, int y)
+                {
+                    return barImage.getPixel(x, y).a;
+                }
+
+            protected:    
+                JG::Image barImage;
+            };
+
+            Bublick(JG::Window* window, int beginX, int beginY) :
+                JG::Panel(window, beginX, beginY, bublickWidth, bublickHeight),
+                roundImage(0, 0, bublickWidth, bublickHeight, "UI/debug/round.png")
+            {
+                children.clear();
+                addChild(new BublickBar(window, this, 0, 0));
+            }
+
+            virtual void addChild(JG::Widget* widget)
+            {
+                Widget::addChild(widget);
+            }
+
+            virtual void renderMyself(int shiftX, int shiftY) override
+            {
+                translateAndDraw(roundImage, window, shiftX + beginX, shiftY + beginY, 0, mousePressed * bublickHeight);
+            }
+
+            virtual bool checkHover(int x, int y)
+            {
+                return roundImage.getPixel(x, y).a;
+            }
+
+        protected:
+            JG::Image roundImage;
+        };
+
+
         int EditorCanvasPanel::nAdded = 0;
 
         // Switcher
@@ -276,6 +361,20 @@ namespace JIMP
                 }
             };
 
+            struct ThicknessSlider : public VistaSlider
+            {
+                ThicknessSlider(JG::Window* window, int beginX, int beginY, int width, float to = 100, float from = 0) : 
+                    VistaSlider(window, beginX, beginY, width, to, from)
+                {
+                    
+                }
+
+                virtual void onMove(float dx)
+                {
+                    toolPicker->setThickness((int)position);
+                }
+            };
+
         public:
             Switcher(JG::Window* window) : 
                 VistaPanel(window, 0, 0, switchWidth, switchHeight)
@@ -285,6 +384,10 @@ namespace JIMP
 
                 addChild(new NextInstrument(window, switchSpace, switchSpace,
                                                       buttonWidth));
+
+                addChild(new ThicknessSlider(window, switchSpace, 2 * switchSpace + VistaButton::buttonHeight,
+                                                     buttonWidth));
+
                 setCaption();
             }
 
@@ -314,6 +417,16 @@ namespace JIMP
             }
         };
 
+        class TestPanel : public VistaPanel
+        {
+        public:
+            TestPanel(JG::Window* window) :
+                VistaPanel(window, 0, 0, switchWidth, switchHeight)
+            {
+                addChild(new VistaTextBox(window, space, space, width - 2 * space, "papa u vani silen v matematike"));
+            }
+        };
+
         Switcher* switcher = nullptr;
         EditorCanvasPanel* mainEditorCanvasPanel = nullptr;
         JG::Panel* palettePanel = nullptr;
@@ -323,13 +436,14 @@ namespace JIMP
         public:
             MainWindow(int sizeX, int sizeY) : JG::Window(sizeX, sizeY, "JIMP", JG::Window::Style::Default)
             {
+                beginDrawing();
+                endDrawing();
                 addChild(palettePanel = new VistaPanel(this, JG::Panel::outline, windowHeight -
                                                                                  paletteHeight - 
                                                                                  VistaPanel::vistaOutline - 
                                                                                  VistaPanel::VistaPanelBar::vistaBarHeight, 
                                                                                  paletteWidth, paletteHeight));
 
-                
 
                 palettePanel->caption = "Palette";
                 palettePanel->addChild(new Palette(this, 0, 0, paletteWidth, paletteHeight, toolPicker = new ToolPicker));
@@ -337,11 +451,16 @@ namespace JIMP
                 toolPicker->insert(new Brush);
                 toolPicker->insert(new Eraser);
                 toolPicker->insert(new Fill);
+                toolPicker->insert(new Drag);
 
                 addChild(mainEditorCanvasPanel = new EditorCanvasPanel(this));
                 layerSwitcher = new LayerSwitcher(mainEditorCanvasPanel->editorCanvas->editor);
 
                 addChild(switcher = new Switcher(this));
+
+                addChild(new TestPanel(this));
+
+                // addChild(new Bublick(this, 0, 0));
             }
 
             virtual void renderMyself(int shiftX, int shiftY)
@@ -349,7 +468,7 @@ namespace JIMP
                 JG::Rectangle rect(0, 0, width, height);
                 rect.setColor({255, 255, 255});
                 rect.draw(*this);
-            }
+            }  
         };
     }
 }

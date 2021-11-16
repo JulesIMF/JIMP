@@ -38,6 +38,7 @@ namespace JIMP
     struct ToolPicker
     {
         void setColor(JG::Color color);
+        void setThickness(int thickness);
         void nextTool();
         void prevTool();
         Tool* getTool();

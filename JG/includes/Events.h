@@ -51,12 +51,14 @@ namespace JG
             Close,
             KeyPressed,
             KeyReleased,
+            MouseScrolled,
             MouseButtonPressed,     
             MouseButtonReleased,    
             MouseMoved,             
             MouseEntered,           
             MouseLeft,
             Paint,
+            Timer
         };
 
         EventType type;
@@ -97,12 +99,28 @@ namespace JG
             int           dy;
         };
 
+        struct EventMouseWheel
+        {
+            float       delta;
+            int         x;
+            int         y;
+        };
+
+        struct EventTimer
+        {
+            long long timeMs;
+            long long passedMs;
+        };
+        
+
         union
         {
             EventClose              close;
             EventKey                key;
             EventMouseButton        mouseButton;
             EventMouseMove          mouseMove;
+            EventTimer              timer;
+            EventMouseWheel         mouseWheel;
         };
 
         Window* window;

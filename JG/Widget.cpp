@@ -81,7 +81,10 @@ void Widget::addChild(Widget* child)
 
 void Widget::setActive(Widget* widget)
 {
+    assert(widget);
+    if (activeChild) activeChild->isActive = false;
     activeChild = widget;
+    widget->isActive = true;
 }
 
 void Widget::popActive()
@@ -96,6 +99,20 @@ void Widget::popActive()
 
     children.erase(itActive);
     children.push_back(activeChild);
+}
+
+void Widget::move(int deltaX, int deltaY)
+{
+    beginX += deltaX;
+    beginY += deltaY;
+    window->sendEvent(Event::PaintEvent());
+}
+
+void Widget::setPosition(int newX, int newY)
+{
+    beginX = newX;
+    beginY = newY;
+    window->sendEvent(Event::PaintEvent());
 }
 
 void Widget::pushToEraseQueue(Widget* widget)
@@ -171,6 +188,7 @@ Widget::HandlerResponce Widget::onMouseButtonPressed(Event event)
         if (renderable &&
             0 <= virtualX && virtualX < (int)renderable->width &&
             0 <= virtualY && virtualY < (int)renderable->height &&
+            renderable->checkHover(virtualX, virtualY) &&
             !renderable->mousePressed)
         {
             if(!activeSet)
@@ -289,13 +307,14 @@ Widget::HandlerResponce Widget::onMouseEntered(Event event)
         if (renderable &&
             0 <= virtualX && virtualX < (int)renderable->width &&
             0 <= virtualY && virtualY < (int)renderable->height &&
+            renderable->checkHover(virtualX, virtualY) &&
             !renderable->mouseOn)
         {
             Event virtualEvent = event;
-            virtualEvent.mouseMove = {.x = virtualX,
-                                      .y = virtualY,
-                                      .dx = event.mouseMove.dx,
-                                      .dy = event.mouseMove.dy };
+            virtualEvent.mouseMove = { .x = virtualX,
+                                       .y = virtualY,
+                                       .dx = event.mouseMove.dx,
+                                       .dy = event.mouseMove.dy };
             renderable->mouseOn = true; // Need to do this if overrided handler does not set mouseOn
             PROCESS_CHILD_RESPONCE(renderable->onMouseEntered(virtualEvent))
         }
@@ -321,6 +340,7 @@ Widget::HandlerResponce Widget::onMouseLeft(Event event)
         if (renderable &&
             0 <= virtualX && virtualX < (int)renderable->width &&
             0 <= virtualY && virtualY < (int)renderable->height &&
+            renderable->checkHover(virtualX, virtualY) &&
             !renderable->mouseOn)
         {
             Event virtualEvent = event;
@@ -337,6 +357,23 @@ Widget::HandlerResponce Widget::onMouseLeft(Event event)
     popActive();
     clearEraseQueue();
     return responce;
+}
+
+bool Widget::checkHover(int x, int y)
+{
+    (void)x;
+    (void)y;
+    return true;
+}
+
+Widget::HandlerResponce Widget::onTimer(Event event)
+{
+    for (auto child : children)
+        child->onTimer(event);
+
+    popActive();
+    clearEraseQueue();
+    return HandlerResponce::SuccessYield;
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"

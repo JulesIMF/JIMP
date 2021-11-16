@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Oct 27 19:20:59 2021
+# Make data base, printed on Fri Oct 29 19:54:28 2021
 
 # Variables
 
@@ -47,9 +47,11 @@ SHELL = /bin/sh
 # environment
 GDM_LANG = ru
 # environment
+VTE_VERSION = 6003
+# environment
 VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"fc3544b702ca8840be343393c42a9ca4.it","_translationsConfigFile":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it/tcf.json","_cacheRoot":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it","_resolvedLanguagePackCoreLocation":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it/6cba118ac49a1b88332f312a8f67186f7f3c1643","_corruptedFile":"/home/julesimf/.config/Code/clp/fc3544b702ca8840be343393c42a9ca4.it/corrupted.info","_languagePackSupport":true}
 # environment
-_ = /usr/share/code/code
+_ = /usr/bin/code
 # makefile (from 'makefile', line 34)
 CFLAGS = $(OPT) $(DEF) $(ASAN) -g $(INC)
 # environment
@@ -85,7 +87,7 @@ XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/julesimf/.local/bin:/home/julesimf/source/linux/tools/gcc-11.1.0-nolibc/x86_64-linux/bin:/home/julesimf/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /home/julesimf/source/linux/tools/gcc-11.1.0-nolibc/x86_64-linux/bin:/home/julesimf/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 KERNEL_IMG = /home/julesimf/source/linux/build/linux/arch/x86_64/boot/bzImage
 # makefile (from 'makefile', line 31)
@@ -93,7 +95,7 @@ SFML = -lsfml-graphics -lsfml-window -lsfml-system
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/julesimf-laptop:@/tmp/.ICE-unix/1353,unix/julesimf-laptop:/tmp/.ICE-unix/1353
+SESSION_MANAGER = local/julesimf-laptop:@/tmp/.ICE-unix/1307,unix/julesimf-laptop:/tmp/.ICE-unix/1307
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -109,13 +111,13 @@ VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"
 # environment
 XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/julesimf
 # environment
-LS_COLORS = 
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
 # environment
 XDG_SESSION_DESKTOP = cinnamon
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 42268
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3361
 # automatic
 %F = $(notdir $%)
 # environment
@@ -135,7 +137,7 @@ QT_QPA_PLATFORMTHEME = qt5ct
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1427
+SSH_AGENT_PID = 1381
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = X-Cinnamon
 # environment
@@ -147,6 +149,8 @@ HOME = /home/julesimf
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
+VSCODE_CLI = 1
+# environment
 VSCODE_CODE_CACHE_PATH = /home/julesimf/.config/Code/CachedData/6cba118ac49a1b88332f312a8f67186f7f3c1643
 # environment
 LOGNAME = julesimf
@@ -156,6 +160,8 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 DEF = -DNDEBUG
 # environment
 MATHEMATICA_HOME = /usr/local/Wolfram/WolframAlphaNotebook/12.2
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -170,6 +176,8 @@ XDG_VTNR = 7
 MAKELEVEL := 0
 # makefile (from 'makefile', line 26)
 ASAN = 
+# environment
+COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -179,9 +187,9 @@ QT_IM_MODULE = ibus
 # makefile (from 'makefile', line 48)
 UI = UI/UI.h UI/Vista.h
 # environment
-SHLVL = 0
+SHLVL = 1
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9e84d2f1-dcc4-4e8e-9cbd-859da3ce2b50.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fa365e14-5f43-413d-b75f-e6d3eae85e79.sock
 # environment
 XDG_SESSION_ID = c2
 # environment
@@ -221,9 +229,13 @@ GDK_BACKEND = x11
 # automatic
 +F = $(notdir $+)
 # environment
+NO_AT_BRIDGE = 1
+# environment
 CINNAMON_VERSION = 4.8.6
 # environment
 QT_ACCESSIBILITY = 1
+# environment
+DESKTOP_AUTOSTART_ID = 10e19d2a16f6ae0696163552614236137300000013070006
 # environment
 DEFAULTS_PATH = /usr/share/gconf/cinnamon.default.path
 # default
@@ -242,8 +254,12 @@ LSFML = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
 QT4_IM_MODULE = ibus
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/29127f8c_8897_4c25_b7a9_0e549f2b6ff5
 # automatic
 ^F = $(notdir $^)
+# environment
+GNOME_TERMINAL_SERVICE = :1.168
 # default
 SUFFIXES := 
 # environment
@@ -257,11 +273,14 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 42268
+TERM = xterm-256color
+# environment
+VSCODE_PID = 3361
+ 
 # makefile (from 'makefile', line 37)
 FILES = $(OBJ)main.o $(OBJ)common/messages.o $(OBJ)common/colors.o $(OBJ)editor/Editor.o $(OBJ)editor/Palette.o $(OBJ)editor/Tool.o $(OBJ)editor/ToolPicker.o $(OBJ)editor/LayerSwitcher.o $(OBJ)editor/Layer.o $(OBJ)file/BMP.o
 # variable set hash-table stats:
-# Load=124/1024=12%, Rehash=0, Collisions=22/162=14%
+# Load=133/1024=13%, Rehash=0, Collisions=25/171=15%
 
 # Pattern-specific Variable Values
 
@@ -286,7 +305,6 @@ obj/%.o: %.cpp
 	(make obj/$@.o;)
 
 # 2 implicit rules, 0 (0.0%) terminal.
- 
 
 # Files
 
@@ -441,6 +459,6 @@ UI/Vista.h:
 # strcache performance: lookups = 66 / hit rate = 28%
 # hash-table stats:
 # Load=47/8192=1%, Rehash=0, Collisions=1/66=2%
-# Finished Make data base on Wed Oct 27 19:20:59 2021
+# Finished Make data base on Fri Oct 29 19:54:28 2021
 
  

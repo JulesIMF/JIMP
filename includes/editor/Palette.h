@@ -18,6 +18,9 @@ Revision History:
 
 --*/
 
+#ifndef JIMP_PALETTE
+#define JIMP_PALETTE
+
 
 //
 // Includes / usings
@@ -98,3 +101,5 @@ namespace JIMP
         ToolPicker* toolPicker;
     };
 }
+
+#endif // !JIMP_PALETTE
