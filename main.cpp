@@ -53,34 +53,31 @@ int main(int argc, char const** argv)
 
     JIMP::UI::MainWindow window(JIMP::UI::windowWidth, JIMP::UI::windowHeight);
 
-    if (argc == 1)
-    {
-        warningMessage("No file specified!");
-    }
-    else
-    {
-        FILE* file = fopen(argv[1], "r");
-        JIMP::BMP bmp = JIMP::loadImage(file);
-        fclose(file);
+    // if (argc == 1)
+    // {
+    //     warningMessage("No file specified!");
+    // }
 
-        if (bmp.bitCount / 8 != 4)
-        {
-            errorMessage("Wrong format");
-        }
+    // else
+    // {
+    //     FILE* file = fopen(argv[1], "r");
+    //     JIMP::BMP bmp = JIMP::loadImage(file);
+    //     fclose(file);
 
-        else
-        {
-            auto image = JIMP::imageToColorBuffer(bmp);
+    //     if (bmp.bitCount / 8 != 4)
+    //     {
+    //         errorMessage("Wrong format");
+    //     }
 
-            auto bmpLayer = JIMP::UI::layerSwitcher->addLayer(bmp.xSize, bmp.ySize);
-            JIMP::transferColorBuffer(JIMP::UI::layerSwitcher->getLayer(bmpLayer)->image, image, bmp.xSize, bmp.ySize);
-        }
-    }
+    //     else
+    //     {
+    //         auto image = JIMP::imageToColorBuffer(bmp);
+
+    //         auto bmpLayer = JIMP::UI::mainEditorCanvasPanel->editorCanvas->layerSwitcher->addLayer(bmp.xSize, bmp.ySize);
+    //         JIMP::transferColorBuffer(JIMP::UI::mainEditorCanvasPanel->editorCanvas->layerSwitcher->getLayer(bmpLayer)->image, image, bmp.xSize, bmp.ySize);
+    //     }
+    // }
     
-    JIMP::UI::layerSwitcher->addLayer(JIMP::UI::editorWidth, JIMP::UI::editorHeight);
-    JIMP::UI::layerSwitcher->nextLayer();
-
-    JIMP::UI::mainEditorCanvasPanel->editorCanvas->editor->mix(JIMP::UI::layerSwitcher->getLayerVector());
     window.sendEvent(JG::Event::PaintEvent());
 
     JG::Event event = {};

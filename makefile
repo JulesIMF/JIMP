@@ -29,7 +29,7 @@ endif
 CXX	    = g++ -std=c++17
 INC	    = -Iincludes -IJG/includes
 SFML    = -lsfml-graphics -lsfml-window -lsfml-system
-OPT	    = -O0
+OPT	    = -O2
 DEF		= -DNDEBUG
 CFLAGS	= $(OPT) $(DEF) $(ASAN) -g $(INC)
 OBJ	    = obj/
@@ -45,38 +45,53 @@ FILES   = $(OBJ)main.o \
 		  $(OBJ)editor/Layer.o \
 		  $(OBJ)file/BMP.o
 
-UI		= UI/UI.h UI/VistaButton.h UI/VistaPanel.h UI/VistaSlider.h UI/VistaTextBox.h
+UI		= UI/UI.h UI/VistaButton.h UI/VistaPanel.h UI/VistaSlider.h UI/VistaTextBox.h UI/Spline.h UI/VistaMenu.h
+GREEN   = @echo "\033[0;32m";
+DFLT    = @echo "\033[0;m";
+
 
 #
 # Rules
 #
 
 jimp: $(FILES) JG/libJG.a
-	$(CXX) $(CFLAGS) $(FILES) JG/libJG.a -pthread $(SFML) -lX11 -o $@
+	$(GREEN)
+	@echo 'Linking $@ (changed $?)';
+	$(DFLT)
+	@$(CXX) $(CFLAGS) $(FILES) JG/libJG.a -pthread $(SFML) -lX11 -o $@
 #	(make clean;)
 
 JG/libJG.a: 
-	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make $@)
+	@(cd JG; OPT=$(OPT) ASAN=$(ASAN) make $@)
 
 lib:
-	(cd JG; OPT=$(OPT) ASAN=$(ASAN) make JG/libJG.a)
+	@(cd JG; OPT=$(OPT) ASAN=$(ASAN) make JG/libJG.a)
 
 obj/main.o: main.cpp $(UI)
-	$(CXX) $(CFLAGS) main.cpp -c
-	mkdir -p $(@D)
-	mv $(@F) $@
+	$(GREEN)
+	@echo 'Building $@ (changed $?)';
+	$(DFLT)
+	@$(CXX) $(CFLAGS) main.cpp -c
+	@mkdir -p $(@D)
+	@mv $(@F) $@
 
 obj/%.o: %.cpp
-	$(CXX) $(CFLAGS) $^ -c
-	mkdir -p $(@D)
-	mv $(@F) $@
+	$(GREEN)
+	@echo 'Building $@ (changed $?)';
+	$(DFLT)
+	@$(CXX) $(CFLAGS) $^ -c
+	@mkdir -p $(@D)
+	@mv $(@F) $@
 
 clean-there:
-	rm $(FILES)
+	$(GREEN)
+	@echo 'Cleaning JIMP project';
+	$(DFLT)
+	@rm $(FILES)
 
 clean:
-	(make clean-there)
-	(cd JG; make clean)
+	@(make clean-there)
+	@(cd JG; make clean)
 
 %: %.cpp
-	(make obj/$@.o;)
+	@(make obj/$@.o;)

@@ -60,7 +60,9 @@
         "condition_variable": "cpp",
         "set": "cpp",
         "mutex": "cpp",
-        "*.txt": "c"
+        "*.txt": "c",
+        "unordered_set": "cpp",
+        "iostream": "cpp"
     },
     "makefile.launchConfigurations": [
         {

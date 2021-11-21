@@ -76,7 +76,7 @@ namespace JIMP
     public:
         static int const cursorSize = 32;
         Fill() : 
-            cursor(0, 0, cursorSize, cursorSize, "resources/images/Canvas/cursor/fill.png")
+            cursor(0, 0, cursorSize, cursorSize, "resources/cursor/fill.png")
         {
 
         }
@@ -99,7 +99,25 @@ namespace JIMP
     public:
         static int const cursorSize = 32;
         Drag() :
-            cursor(0, 0, cursorSize, cursorSize, "resources/images/Canvas/cursor/drag.png")
+            cursor(0, 0, cursorSize, cursorSize, "resources/cursor/drag.png")
+        {
+
+        }
+        virtual void applyOnPress(Layer& layer) override;
+        virtual void applyOnMove(Layer& layer) override;
+        virtual void applyOnRelease(Layer& layer) override;
+        virtual void drawCursor(JG::Window* window, int x, int y, int canvasWidth, int canvasHeight, int shiftX, int shiftY);
+        virtual char const* getName() override;
+
+        JG::Image cursor;
+    };
+
+    class Eyedropper : public Tool
+    {
+    public:
+        static int const cursorSize = 32;
+        Eyedropper() :
+            cursor(0, 0, cursorSize, cursorSize, "resources/cursor/drag.png")
         {
 
         }

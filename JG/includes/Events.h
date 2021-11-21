@@ -57,8 +57,11 @@ namespace JG
             MouseMoved,             
             MouseEntered,           
             MouseLeft,
+            FocusEntered,
+            FocusLeft,
             Paint,
-            Timer
+            Timer,
+            Delete,
         };
 
         EventType type;
@@ -125,8 +128,9 @@ namespace JG
 
         Window* window;
 
-        static Event PaintEvent() { Event event; event.type = Paint; return event; }
-        static Event CloseEvent() { Event event; event.type = Close; return event; }
+        static Event PaintEvent()  { Event event; event.type = Paint; return event; }
+        static Event CloseEvent()  { Event event; event.type = Close; return event; }
+        static Event DeleteEvent() { Event event; event.type = Delete; return event; }
 
     protected:
 #ifdef SFML_WRAPPER

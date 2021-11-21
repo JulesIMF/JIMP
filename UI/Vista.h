@@ -30,5 +30,7 @@ Revision History:
 #include "VistaButton.h"
 #include "VistaPanel.h"
 #include "VistaTextBox.h"
+#include "VistaMenu.h"
+#include "Spline.h"
 
 #endif // vista

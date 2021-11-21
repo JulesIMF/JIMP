@@ -89,18 +89,28 @@ char const* Brush::getName()
 
 void Brush::drawCursor(JG::Window* window, int x, int y, int canvasWidth, int canvasHeight, int shiftX, int shiftY)
 {
-    int circleX = std::max(x - thickness, 0);
-    int circleY = std::max(y - thickness, 0);
-    circleX = std::min(circleX, canvasWidth - 2 * thickness);
-    circleY = std::min(circleY, canvasHeight - 2 * thickness);
-    
-    JG::Circle black(shiftX + circleX, shiftY + circleY, thickness);
-    black.setColor(JG::Color::Black);
-    black.draw(*window);
+    sf::RenderTexture texture;
+    texture.create(canvasWidth, canvasHeight);
+    int circleX = x - thickness;
+    int circleY = y - thickness;
 
-    JG::Circle fillColor(shiftX + circleX + outline, shiftY + circleY + outline, thickness - outline);
-    fillColor.setColor(color);
-    fillColor.draw(*window);
+    sf::CircleShape black;
+    black.move({circleX, circleY});
+    black.setRadius(thickness);
+    black.setFillColor(sf::Color::Black);
+    texture.draw(black);
+
+    sf::CircleShape fillColor;
+    fillColor.move({ circleX + outline, circleY + outline });
+    fillColor.setRadius(thickness - outline);
+    fillColor.setFillColor(color);
+    texture.draw(fillColor);
+
+    texture.display();
+    sf::Transform transform; 
+    transform.translate({shiftX, shiftY});
+    
+    window->getSfWindow().draw(sf::Sprite(texture.getTexture()), transform);
 }
 
 void Eraser::applyOnPress(Layer& layer)
@@ -145,18 +155,28 @@ char const* Eraser::getName()
 
 void Eraser::drawCursor(JG::Window* window, int x, int y, int canvasWidth, int canvasHeight, int shiftX, int shiftY)
 {
-    int circleX = std::max(x - thickness, 0);
-    int circleY = std::max(y - thickness, 0);
-    circleX = std::min(circleX, canvasWidth - 2 * thickness);
-    circleY = std::min(circleY, canvasHeight - 2 * thickness);
+    sf::RenderTexture texture;
+    texture.create(canvasWidth, canvasHeight);
+    int circleX = x - thickness;
+    int circleY = y - thickness;
 
-    JG::Circle black(shiftX + circleX, shiftY + circleY, thickness);
-    black.setColor(JG::Color::Black);
-    black.draw(*window);
+    sf::CircleShape black;
+    black.move({ circleX, circleY });
+    black.setRadius(thickness);
+    black.setFillColor(sf::Color::Black);
+    texture.draw(black);
 
-    JG::Circle fillColor(shiftX + circleX + outline, shiftY + circleY + outline, thickness - outline);
-    fillColor.setColor(JG::Color::White);
-    fillColor.draw(*window);
+    sf::CircleShape fillColor;
+    fillColor.move({ circleX + outline, circleY + outline });
+    fillColor.setRadius(thickness - outline);
+    fillColor.setFillColor(sf::Color::White);
+    texture.draw(fillColor);
+
+    texture.display();
+    sf::Transform transform;
+    transform.translate({ shiftX, shiftY });
+
+    window->getSfWindow().draw(sf::Sprite(texture.getTexture()), transform);
 }
 
 inline void Fill::walkAndSet(JG::Color** image, JG::Color oldColor, JG::Vector2i point, 

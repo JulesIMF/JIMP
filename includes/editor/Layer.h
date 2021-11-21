@@ -66,6 +66,7 @@ namespace JIMP
                              int fromWidth, int fromHeight);
 
     void transferColorBuffer(JG::Color** to, JG::Color const* const* from, int width, int height);
+    void deleteColorBuffer(JG::Color** buffer, int width, int height);
 }
 
 #endif // !LAYER_JULESIMF

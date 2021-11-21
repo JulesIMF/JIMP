@@ -60,3 +60,11 @@ void JIMP::transferColorBuffer(JG::Color** to, JG::Color const* const* from, int
 {
     transferColorBuffer(to, from, width, height, width, height);
 }
+
+void JIMP::deleteColorBuffer(JG::Color** buffer, int width, int height)
+{
+    for (int i = 0; i != width; i++)
+        delete[] buffer[i];
+    
+    delete[] buffer;
+}

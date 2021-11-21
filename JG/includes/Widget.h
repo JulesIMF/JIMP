@@ -113,6 +113,8 @@ namespace JG
          */
         virtual HandlerResponce onMouseButtonReleased(Event event);
 
+        virtual HandlerResponce onMouseScrolled(Event event);
+
         virtual HandlerResponce onMouseMoved(Event event);
 
         /**
@@ -136,6 +138,10 @@ namespace JG
         */
         virtual HandlerResponce onMouseLeft(Event event);
 
+        virtual HandlerResponce onFocusEntered(Event event);
+        virtual HandlerResponce onFocusLeft(Event event);
+        virtual HandlerResponce onDelete(Event event);
+
         virtual bool checkHover(int x, int y);
 
         virtual void renderMyself(int shiftX, int shiftY);
@@ -145,15 +151,20 @@ namespace JG
         virtual void setActive(Widget* Widget);
         virtual void popActive();
         virtual void pushToEraseQueue(Widget* Widget);
-        virtual void clearEraseQueue();
+        virtual void pushToPopQueue(Widget* Widget);
+        virtual void pushToAddQueue(Widget* Widget);
+        virtual void applyQueueChanges();
         virtual void move(int deltaX, int deltaY);
         virtual void setPosition(int newX, int newY);
 
     protected:
         std::vector<Widget*> children;
         std::queue<Widget*> deletedChildren;
+        std::queue<Widget*> popChildren;
+        std::queue<Widget*> addChildren;
         Widget* activeChild = nullptr;
         bool isActive = false;
+        bool noActive = false;
         bool mouseOn = false;
         bool mousePressed = false;
         Window* window;

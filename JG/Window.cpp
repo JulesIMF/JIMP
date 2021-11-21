@@ -226,6 +226,10 @@ bool JG::Window::pollEvent(JG::Event& event)
         window->onMouseLeft(event);
         break;
 
+    case Event::MouseScrolled:
+        window->onMouseScrolled(event);
+        break;
+
     case Event::Timer:
         window->onTimer(event);
         break;

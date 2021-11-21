@@ -40,7 +40,7 @@ switch (action)                                             \
 {                                                           \
             case HandlerResponce::SuccessCapture:           \
                 popActive();                                \
-                clearEraseQueue();                          \
+                applyQueueChanges();                          \
                 return HandlerResponce::SuccessCapture;     \
                                                             \
                                                             \
@@ -70,21 +70,41 @@ Widget::HandlerResponce Widget::onClose(Event event)
 
 Widget::~Widget()
 {
-    for (auto child : children) delete child;
+    for (auto child : children) 
+    {
+        child->onDelete(Event::DeleteEvent());
+        delete child;
+    }
 }
 
 void Widget::addChild(Widget* child)
 {
-    children.push_back(child);
+    if (child->noActive)
+        children.insert(children.begin(), child);
+    else
+        children.push_back(child);
     window->sendEvent(Event::PaintEvent());
 }
 
 void Widget::setActive(Widget* widget)
 {
     assert(widget);
-    if (activeChild) activeChild->isActive = false;
+    if (widget->noActive || activeChild == widget)
+        return;
+
+    if (activeChild) 
+    {
+        activeChild->isActive = false;
+        Event event;
+        event.type = Event::FocusLeft;
+        activeChild->onFocusLeft(event);
+    }
+
     activeChild = widget;
     widget->isActive = true;
+    Event event;
+    event.type = Event::FocusEntered;
+    activeChild->onFocusEntered(event);
 }
 
 void Widget::popActive()
@@ -120,7 +140,17 @@ void Widget::pushToEraseQueue(Widget* widget)
     deletedChildren.push(widget);
 }
 
-void Widget::clearEraseQueue()
+void Widget::pushToPopQueue(Widget* widget)
+{
+    popChildren.push(widget);
+}
+
+void Widget::pushToAddQueue(Widget* widget)
+{
+    addChildren.push(widget);
+}
+
+void Widget::applyQueueChanges()
 {
     while (!deletedChildren.empty())
     {
@@ -128,6 +158,7 @@ void Widget::clearEraseQueue()
 
         if (itErase != children.end())
         {
+            (*itErase)->onDelete(Event::DeleteEvent());
             delete *itErase;
             
             if (activeChild == *itErase) 
@@ -138,7 +169,33 @@ void Widget::clearEraseQueue()
         
         deletedChildren.pop();
     }
-    
+
+    while (!popChildren.empty())
+    {
+        auto itErase = std::find(children.begin(), children.end(), popChildren.front());
+
+        if (itErase != children.end())
+        {
+            if (activeChild == *itErase)
+                activeChild = nullptr;
+
+            children.erase(itErase);
+        }
+
+        popChildren.pop();
+    }
+
+    while (!addChildren.empty())
+    {
+        auto itErase = std::find(children.begin(), children.end(), addChildren.front());
+
+        if (itErase == children.end())
+        {
+            children.push_back(addChildren.front());
+        }
+
+        addChildren.pop();
+    }
 }
 
 Widget::HandlerResponce Widget::onKeyPressed(Event event)
@@ -150,6 +207,9 @@ Widget::HandlerResponce Widget::onKeyPressed(Event event)
 
     for (auto child : children)
     {
+        if (child == activeChild)
+            continue;
+
         PROCESS_CHILD_RESPONCE(child->onKeyPressed(event))
     }
 
@@ -165,6 +225,9 @@ Widget::HandlerResponce Widget::onKeyReleased(Event event)
 
     for (auto child : children)
     {
+        if (child == activeChild)
+            continue;
+
         PROCESS_CHILD_RESPONCE(child->onKeyReleased(event))
     }
 
@@ -208,7 +271,7 @@ Widget::HandlerResponce Widget::onMouseButtonPressed(Event event)
     }
 
     popActive();
-    clearEraseQueue();
+    applyQueueChanges();
     return responce;
 }
 
@@ -238,7 +301,42 @@ Widget::HandlerResponce Widget::onMouseButtonReleased(Event event)
     }
 
     popActive();
-    clearEraseQueue();
+    applyQueueChanges();
+    return responce;
+}
+
+Widget::HandlerResponce Widget::onMouseScrolled(Event event)
+{
+    HandlerResponce responce = HandlerResponce::Failure;
+
+    if (activeChild)
+    {
+        int virtualX = event.mouseWheel.x - activeChild->beginX,
+            virtualY = event.mouseWheel.y - activeChild->beginY;
+
+        Event virtualEvent = event;
+        virtualEvent.mouseWheel = { .delta = event.mouseWheel.delta,
+                                    .x = virtualX,
+                                    .y = virtualY };
+
+        PROCESS_CHILD_RESPONCE(activeChild->onMouseScrolled(event));
+    }
+
+    for (auto child : children)
+    {
+        if (child == activeChild)
+            continue;
+
+        int virtualX = event.mouseWheel.x - child->beginX,
+            virtualY = event.mouseWheel.y - child->beginY;
+
+        Event virtualEvent = event;
+        virtualEvent.mouseWheel = { .delta = event.mouseWheel.delta,
+                                    .x = virtualX,
+                                    .y = virtualY };
+        PROCESS_CHILD_RESPONCE(child->onMouseScrolled(virtualEvent))
+    }
+
     return responce;
 }
 
@@ -274,7 +372,7 @@ Widget::HandlerResponce Widget::onMouseMoved(Event event)
                 continue;
                 
             renderable->mouseOn = true; // Need to do this if overrided handler does not set mouseOn
-            PROCESS_CHILD_RESPONCE(renderable->onMouseEntered(virtualEvent))
+            renderable->onMouseEntered(virtualEvent);
         }
 
         else
@@ -283,46 +381,47 @@ Widget::HandlerResponce Widget::onMouseMoved(Event event)
                 continue;
             
             renderable->mouseOn = false; // Need to do this if overrided handler does not set mouseOn
-            PROCESS_CHILD_RESPONCE(renderable->onMouseLeft(virtualEvent))
+            renderable->onMouseLeft(virtualEvent);
         }
     }
 
     popActive();
-    clearEraseQueue();
+    applyQueueChanges();
     return responce;
 }
 
 Widget::HandlerResponce Widget::onMouseEntered(Event event)
 {
-    mouseOn = true;
-    HandlerResponce responce = HandlerResponce::Failure;
+    // mouseOn = true;
+    // HandlerResponce responce = HandlerResponce::Failure;
 
-    for (auto child = children.rbegin(); child != children.rend(); child++)
-    {
-        Widget* renderable = *child;
+    // for (auto child = children.rbegin(); child != children.rend(); child++)
+    // {
+    //     Widget* renderable = *child;
 
-        int virtualX = event.mouseButton.x - renderable->beginX,
-            virtualY = event.mouseButton.y - renderable->beginY;
+    //     int virtualX = event.mouseButton.x - renderable->beginX,
+    //         virtualY = event.mouseButton.y - renderable->beginY;
 
-        if (renderable &&
-            0 <= virtualX && virtualX < (int)renderable->width &&
-            0 <= virtualY && virtualY < (int)renderable->height &&
-            renderable->checkHover(virtualX, virtualY) &&
-            !renderable->mouseOn)
-        {
-            Event virtualEvent = event;
-            virtualEvent.mouseMove = { .x = virtualX,
-                                       .y = virtualY,
-                                       .dx = event.mouseMove.dx,
-                                       .dy = event.mouseMove.dy };
-            renderable->mouseOn = true; // Need to do this if overrided handler does not set mouseOn
-            PROCESS_CHILD_RESPONCE(renderable->onMouseEntered(virtualEvent))
-        }
-    }
+    //     if (renderable &&
+    //         0 <= virtualX && virtualX < (int)renderable->width &&
+    //         0 <= virtualY && virtualY < (int)renderable->height &&
+    //         renderable->checkHover(virtualX, virtualY) &&
+    //         !renderable->mouseOn)
+    //     {
+    //         Event virtualEvent = event;
+    //         virtualEvent.mouseMove = { .x = virtualX,
+    //                                    .y = virtualY,
+    //                                    .dx = event.mouseMove.dx,
+    //                                    .dy = event.mouseMove.dy };
+    //         renderable->mouseOn = true; // Need to do this if overrided handler does not set mouseOn
+    //         PROCESS_CHILD_RESPONCE(renderable->onMouseEntered(virtualEvent))
+    //     }
+    // }
 
-    popActive();
-    clearEraseQueue();
-    return responce;
+    // popActive();
+    // applyQueueChanges();
+    (void)event;
+    return HandlerResponce::Success;
 }
 
 Widget::HandlerResponce Widget::onMouseLeft(Event event)
@@ -355,7 +454,7 @@ Widget::HandlerResponce Widget::onMouseLeft(Event event)
     }
 
     popActive();
-    clearEraseQueue();
+    applyQueueChanges();
     return responce;
 }
 
@@ -372,8 +471,26 @@ Widget::HandlerResponce Widget::onTimer(Event event)
         child->onTimer(event);
 
     popActive();
-    clearEraseQueue();
+    applyQueueChanges();
     return HandlerResponce::SuccessYield;
+}
+
+Widget::HandlerResponce Widget::onFocusEntered(Event event)
+{
+    (void)event;
+    return HandlerResponce::Success;
+}
+
+Widget::HandlerResponce Widget::onFocusLeft(Event event)
+{
+    (void)event;
+    return HandlerResponce::Success;
+}
+
+Widget::HandlerResponce Widget::onDelete(Event event)
+{
+    (void)event;
+    return HandlerResponce::Success;
 }
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"

@@ -42,21 +42,32 @@ JGFILES   = $(OBJ)Events.o \
 		    $(OBJ)Canvas.o \
 			$(OBJ)Panel.o
 
+GREEN   = @echo "\033[0;32m";
+DFLT    = @echo "\033[0;m";		
 
 #
 # Rules
 #
 
 JG/libJG.a: $(JGFILES)
-	$(AR) rcs libJG.a $(JGFILES)
+	$(GREEN)
+	@echo 'Compressing $@ (changed $?)';
+	$(DFLT)	
+	@$(AR) rcs libJG.a $(JGFILES)
 
 obj/%.o: %.cpp
-	$(CXX) $(CFLAGS) $^ -c -lX11
-	mkdir -p $(@D)
-	mv $(@F) $@
+	$(GREEN)
+	@echo 'Building $@ (changed $?)';
+	$(DFLT)	
+	@$(CXX) $(CFLAGS) $^ -c -lX11
+	@mkdir -p $(@D)
+	@mv $(@F) $@
 
 clean:
-	rm $(JGFILES) libJG.a
+	$(GREEN)
+	@echo 'Cleaning JG project';
+	$(DFLT)
+	@rm $(JGFILES) libJG.a
 
 %: %.cpp
-	(make obj/$@.o;)
+	@(make obj/$@.o;)

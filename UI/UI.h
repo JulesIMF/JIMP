@@ -39,7 +39,6 @@ namespace JIMP
     {
         Palette* palette = nullptr;
         ToolPicker* toolPicker = nullptr;
-        LayerSwitcher* layerSwitcher = nullptr;
 
         JIMP::BMP bmp;
         char const* filename = nullptr;
@@ -55,12 +54,16 @@ namespace JIMP
         static int const switchWidth  = buttonWidth + 2 * switchSpace,
                          switchHeight = switchSpace + (switchSpace + buttonHeight) * switchN;
 
+        class EditorCanvas;
+        EditorCanvas* activeCanvas = nullptr;
+
         // Editor
 
         class EditorCanvas : public JG::Canvas
         {
         public:
             Editor* editor;
+            LayerSwitcher* layerSwitcher = nullptr;
 
             int toolX = 0, toolY = 0;
 
@@ -73,6 +76,8 @@ namespace JIMP
                 {
                     transferFromBuffer(editor->getImage());
                 }
+
+                layerSwitcher = new LayerSwitcher(editor);
             }
 
             virtual void renderMyself(int shiftX, int shiftY) override
@@ -81,13 +86,16 @@ namespace JIMP
                 flush();
 
                 Canvas::renderMyself(shiftX, shiftY);
-                toolPicker->getTool()->drawCursor(window,
-                                                  toolX,
-                                                  toolY,
-                                                  editorWidth, 
-                                                  editorHeight, 
-                                                  shiftX, 
-                                                  shiftY + VistaPanel::VistaPanelBar::vistaBarHeight);
+                if (this == activeCanvas)
+                {
+                    toolPicker->getTool()->drawCursor(window,
+                                                      toolX,
+                                                      toolY,
+                                                      editorWidth, 
+                                                      editorHeight, 
+                                                      shiftX, 
+                                                      shiftY + VistaPanel::VistaPanelBar::vistaBarHeight);
+                }
             }
 
             void moveTool(int x, int y, int dx, int dy)
@@ -231,7 +239,7 @@ namespace JIMP
         public:
             EditorCanvas* editorCanvas;
 
-            EditorCanvasPanel(JG::Window* window, int width = editorWidth, int height = editorHeight) : 
+            EditorCanvasPanel(JG::Window* window, char const* fileName = nullptr, int width = editorWidth, int height = editorHeight) : 
                 VistaPanel(window, 
                            (windowWidth - width) / 2 + nAdded * space, 
                            (windowHeight - height) / 2 + nAdded * space,
@@ -240,12 +248,61 @@ namespace JIMP
                 editorCanvas(new EditorCanvas(window, 0, 0, width, height))
             {
                 addChild(editorCanvas);
+                if (activeCanvas == nullptr)
+                    activeCanvas = editorCanvas;
+
                 caption = "Editor canvas";
                 nAdded++;
+
+                if (fileName)
+                {
+                    FILE* file = fopen(filename, "r");
+                    JIMP::BMP bmp = JIMP::loadImage(file);
+                    fclose(file);
+
+                    if (bmp.bitCount / 8 != 4)
+                    {
+                        errorMessage("Wrong format");
+                    }
+
+                    else
+                    {
+                        auto image = JIMP::imageToColorBuffer(bmp);
+                        auto bmpLayer = editorCanvas->layerSwitcher->addLayer(bmp.xSize, bmp.ySize);
+                        JIMP::transferColorBuffer(editorCanvas->layerSwitcher->getLayer(bmpLayer)->image, image, bmp.xSize, bmp.ySize);
+                        JIMP::deleteColorBuffer(image, bmp.xSize, bmp.ySize);
+                    }
+                }
+
+                editorCanvas->layerSwitcher->addLayer(JIMP::UI::editorWidth, JIMP::UI::editorHeight);
+                editorCanvas->layerSwitcher->nextLayer();
+
+                editorCanvas->editor->mix(editorCanvas->layerSwitcher->getLayerVector());
+            }
+
+            virtual JG::Widget::HandlerResponce onFocusEntered(JG::Event event) override
+            {
+                debugMessage("Now 0x%p got focus", this);
+                activeCanvas = editorCanvas;
+                return JG::Widget::HandlerResponce::Success;
+            }
+
+            virtual JG::Widget::HandlerResponce onFocusLeft(JG::Event event) override
+            {
+                debugMessage("Now 0x%p lost focus", this);
+                return JG::Widget::HandlerResponce::Success;
+            }
+
+            virtual JG::Widget::HandlerResponce onDelete(JG::Event event) override
+            {
+                if (activeCanvas == editorCanvas)
+                    activeCanvas = nullptr;
+
+                return JG::Widget::HandlerResponce::Success;
             }
 
             static int nAdded;
-            };
+        };
         
         class Bublick : public JG::Panel
         {
@@ -421,15 +478,151 @@ namespace JIMP
         {
         public:
             TestPanel(JG::Window* window) :
-                VistaPanel(window, 0, 0, switchWidth, switchHeight)
+                VistaPanel(window, 0, 0, 2 * space + Spline::fullSize, switchHeight + Spline::fullSize + space)
             {
                 addChild(new VistaTextBox(window, space, space, width - 2 * space, "papa u vani silen v matematike"));
+                addChild(new Spline(window, space, switchHeight));
             }
         };
 
-        Switcher* switcher = nullptr;
+        class PalettePanel : public VistaPanel
+        {
+        public:
+            PalettePanel(JG::Window* window) :
+                VistaPanel(window, JG::Panel::outline, windowHeight -
+                                                       paletteHeight - 
+                                                       VistaPanel::vistaOutline - 
+                                                       VistaPanel::VistaPanelBar::vistaBarHeight, 
+                                                       paletteWidth, paletteHeight)
+            {
+                caption = "Palette";
+                addChild(new Palette(window, 0, 0, paletteWidth, paletteHeight, toolPicker));
+            }
+        };
+
+        class CurvesPanel : public VistaPanel
+        {
+        public:
+            CurvesPanel(JG::Window* window, Layer* layer) :
+                VistaPanel(window, space, space, 2 * space + Spline::fullSize, space + Spline::fullSize + space),
+                layer(layer)
+            {
+                addChild(new Spline(window, space, space));
+            }
+
+        protected:
+            Layer* layer;
+        };
+
+        struct MainWindowMenuStrip : public VistaMenuStrip
+        {
+            struct ExitItem : public VistaMenuItem
+            {
+                ExitItem(JG::Window* window) :
+                    VistaMenuItem(window, "Exit")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    debugMessage("Exit...");
+                    window->sendEvent(JG::Event::CloseEvent());
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+            struct PaletteItem : public VistaMenuItem
+            {
+                PaletteItem(JG::Window* window) :
+                    VistaMenuItem(window, "Palette")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new PalettePanel(window));
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+            struct SwitcherItem : public VistaMenuItem
+            {
+                SwitcherItem(JG::Window* window) :
+                    VistaMenuItem(window, "Switcher")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new Switcher(window));
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+            struct CanvasItem : public VistaMenuItem
+            {
+                CanvasItem(JG::Window* window) :
+                    VistaMenuItem(window, "Empty canvas")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new EditorCanvasPanel(window));
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+            struct CurvesItem : public VistaMenuItem
+            {
+                CurvesItem(JG::Window* window) :
+                    VistaMenuItem(window, "Curves")
+                {
+                    
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    if (activeCanvas)
+                    {
+                        window->addChild(new CurvesPanel(window, activeCanvas->layerSwitcher->getCurrentLayer()));
+                    }
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+
+            MainWindowMenuStrip(JG::Window* window) :
+                VistaMenuStrip(window)
+            {
+                VistaMenuButton* file = new VistaMenuButton(window, this, "File");
+                VistaMenuButton* panels = new VistaMenuButton(window, this, "Panels");
+                VistaMenuButton* correction = new VistaMenuButton(window, this, "Correction");
+                addChild(file);
+                addChild(panels);
+                addChild(correction);
+
+                VistaMenu* fileMenu = new VistaMenu(window, file);
+                fileMenu->addChild(new ExitItem(window));
+                file->setMenu(fileMenu);
+
+                VistaMenu* panelsMenu = new VistaMenu(window, panels);
+                panelsMenu->addChild(new PaletteItem(window));
+                panelsMenu->addChild(new SwitcherItem(window));
+                panelsMenu->addChild(new CanvasItem(window));
+                panels->setMenu(panelsMenu);
+
+                VistaMenu* correctionMenu = new VistaMenu(window, correction);
+                correctionMenu->addChild(new CurvesItem(window));
+                correction->setMenu(correctionMenu);
+            }
+        };
+
         EditorCanvasPanel* mainEditorCanvasPanel = nullptr;
-        JG::Panel* palettePanel = nullptr;
 
         class MainWindow : public JG::Window
         {
@@ -438,27 +631,20 @@ namespace JIMP
             {
                 beginDrawing();
                 endDrawing();
-                addChild(palettePanel = new VistaPanel(this, JG::Panel::outline, windowHeight -
-                                                                                 paletteHeight - 
-                                                                                 VistaPanel::vistaOutline - 
-                                                                                 VistaPanel::VistaPanelBar::vistaBarHeight, 
-                                                                                 paletteWidth, paletteHeight));
 
-
-                palettePanel->caption = "Palette";
-                palettePanel->addChild(new Palette(this, 0, 0, paletteWidth, paletteHeight, toolPicker = new ToolPicker));
-
+                toolPicker = new ToolPicker;
                 toolPicker->insert(new Brush);
                 toolPicker->insert(new Eraser);
                 toolPicker->insert(new Fill);
                 toolPicker->insert(new Drag);
 
                 addChild(mainEditorCanvasPanel = new EditorCanvasPanel(this));
-                layerSwitcher = new LayerSwitcher(mainEditorCanvasPanel->editorCanvas->editor);
 
-                addChild(switcher = new Switcher(this));
+                // addChild(switcher = new Switcher(this));
 
-                addChild(new TestPanel(this));
+                // addChild(new TestPanel(this));
+
+                addChild(new MainWindowMenuStrip(this));
 
                 // addChild(new Bublick(this, 0, 0));
             }
