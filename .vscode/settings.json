@@ -70,5 +70,6 @@
             "binaryPath": "/home/julesimf/source/Ded 3/JIMP/jimp",
             "binaryArgs": []
         }
-    ]
+    ],
+    "cmake.configureOnOpen": true
 }

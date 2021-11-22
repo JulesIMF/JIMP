@@ -58,7 +58,7 @@ bool LayerSwitcher::setLayer(int newCurrentLayer)
 void LayerSwitcher::nextLayer()
 {
     if (nLayers() == 0)
-        return;
+        return; 
 
     currentLayer = (currentLayer + 1) % nLayers();
     debugMessage("nextLayer: currentLayer set to %d", currentLayer);
