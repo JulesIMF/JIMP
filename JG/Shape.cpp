@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    Shape is a graphics abstraction above sf::Shape.
 
 Author / Creation date:
 

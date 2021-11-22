@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    Events are objects that are sent if something
+    interest (related to JG) happens.
 
 Author / Creation date:
 

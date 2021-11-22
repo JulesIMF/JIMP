@@ -8,13 +8,14 @@ Module Name:
 
 Abstract:
 
-    
+    JG_VERSION global definition.
 
 Author / Creation date:
 
     JulesIMF / 17.10.21
 
 Revision History:
+	23.11.21  02:09		Switched version to alpha v1.2.0
 
 --*/
 
@@ -28,4 +29,4 @@ Revision History:
 // Defines
 //
 
-#define JG_VERSION "alpha v1.0.1 (17 oct 2021)"
+#define JG_VERSION "alpha v1.2.0 (23 nov 2021)"

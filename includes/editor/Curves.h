@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    An abstraction that takes RGB remaping plots
+    and changes chanels brightness.
 
 Author / Creation date:
 
@@ -34,43 +35,39 @@ namespace JIMP
 {
     struct Curves
     {
-        Curves(Layer* layer, int const* plot) :
+        enum Chanel
+        {
+            R = 1,
+            G = 2,
+            B = 4,
+        };
+
+        Curves(Layer* layer, int const* rPlot, int const* gPlot, int const* bPlot) :
             layer(layer),
-            plot(plot)
+            rPlot(rPlot),
+            gPlot(gPlot),
+            bPlot(bPlot)
         {
 
         }
 
-        void apply()
+        void apply(int chanels = R | G | B)
         {
-            // double effectivePlot[plotSize];
-
-            // for (int i = 0; i != plotSize; i++)
-            //     effectivePlot[i] = (double)plot[i];
+            bool rMod = chanels & R,
+                 gMod = chanels & G,
+                 bMod = chanels & B;
 
             for (int x = 0; x != layer->width; x++)
             {
                 for (int y = 0; y != layer->height; y++)
                 {
                     auto color = layer->image[x][y];
-                    // double brightness = 0.3 * (double)color.r + 0.59 * (double)color.g + 0.11 * (double)color.b;
-                    // int index = std::min(255, (int)brightness);
-                    // double coef = effectivePlot[index] / brightness;
-                    // JG::Color newColor
-                    // {
-                    //     (uint8_t)std::min(255, (int)((float)color.r * coef)),
-                    //     (uint8_t)std::min(255, (int)((float)color.g * coef)),
-                    //     (uint8_t)std::min(255, (int)((float)color.b * coef)),
-                    //     color.a
-                    // };
-
-                    // layer->preview[x][y] = newColor;
 
                     layer->preview[x][y] = 
                         {
-                            plot[color.r],
-                            plot[color.g],
-                            plot[color.b],
+                            rMod ? rPlot[color.r] : color.r,
+                            gMod ? gPlot[color.g] : color.g,
+                            bMod ? bPlot[color.b] : color.b,
                             color.a
                         };
                         
@@ -81,6 +78,8 @@ namespace JIMP
     protected:
         static int const plotSize = 256;
         Layer* layer;
-        int const* const plot;
+        int const* rPlot,
+                 * gPlot,
+                 * bPlot;
     };
 }

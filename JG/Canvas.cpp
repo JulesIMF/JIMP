@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    Canvas is a widget that allows to use it as a
+    render context.
 
 Author / Creation date:
 

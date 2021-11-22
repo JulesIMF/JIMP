@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    Editor mixes layers into one image.
 
 Author / Creation date:
 
@@ -59,7 +59,7 @@ void Editor::mix(std::vector<Layer*>& layers)
 {
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            image[x][y] = ( ((x >> 4) + (y >> 4)) & 1 ) ?
+            image[x][y] = ( (((x - shiftX) >> 4) + ((y - shiftY) >> 4)) & 1 ) ?
             JG::Color{255, 255, 255, 255} : // white
             JG::Color{ 128, 128, 128, 255 }; // gray
 

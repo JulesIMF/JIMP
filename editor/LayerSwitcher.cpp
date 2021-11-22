@@ -8,7 +8,9 @@ Module Name:
 
 Abstract:
 
-    
+    Layer switcher contains all layers for its canvas.
+    It IS able to give reference to the vector of them
+    for mixing in Editor.
 
 Author / Creation date:
 

@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    Vista-style widgets major-include.
 
 Author / Creation date:
 

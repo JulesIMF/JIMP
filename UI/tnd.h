@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    translateAndDraw allows to draw an image with
+    a translation (and maybe shifting in texture).
 
 Author / Creation date:
 

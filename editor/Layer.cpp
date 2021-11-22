@@ -8,7 +8,9 @@ Module Name:
 
 Abstract:
 
-    
+    Different colors functions.
+    See includes/editor/Layer.h for 
+    Layer struct realization.
 
 Author / Creation date:
 

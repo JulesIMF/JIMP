@@ -8,7 +8,13 @@ Module Name:
 
 Abstract:
 
+    JIMP::UI::Spline is a square-shaped widget
+    that has 3splines: red, green and blue. 
+    It contains points for each color and
+    calculates plot linearly between them.
 
+    Points are not JG::Widgets, Spline proceeds
+    all events by itself.
 
 Author / Creation date:
 
@@ -45,6 +51,18 @@ namespace JIMP
             static int const fullSize = 270;
             static int const gradSize = fullSize - backSize;
 
+            enum Chanel
+            {
+                None = 0,
+                R = 1,
+                G = 2,
+                B = 3,
+
+
+                Min = R,
+                Lim = B + 1
+            };
+
             struct SplinePoint
             {
                 int x, y;
@@ -54,14 +72,17 @@ namespace JIMP
                 JG::Widget(window, beginX, beginY, fullSize, fullSize),
                 fullImage(0, 0, fullSize, fullSize, "resources/images/Spline/back_grad.png")
             {
-                points.push_back({ 0, 0 });
-                points.push_back({ backSize - 1, backSize - 1 });
-                recalcPlot();
+                for (int chanel = Min; chanel < Lim; chanel++)
+                {
+                    chanelToPoints[chanel]->push_back({ 0, 0 });
+                    chanelToPoints[chanel]->push_back({ backSize - 1, backSize - 1 });
+                    recalcPlot(*chanelToPoints[chanel], chanelToPlot[chanel]);
+                }
             }
 
-            int const* getPlot()
-            {
-                return plot;
+            int* getPlot(Chanel chanel)
+            {   
+                return chanelToPlot[chanel];
             }
 
             void flush()
@@ -77,31 +98,48 @@ namespace JIMP
             virtual void renderMyself(int shiftX, int shiftY) override
             {
                 translateAndDraw(fullImage, window, shiftX + beginX, shiftY + beginY);
-                sf::Color const color = sf::Color::Blue;
-
-                for (int i = 0; i != backSize - 1; i++)
+                sf::Color const chanelToColor[nChanels + 1] = 
                 {
-                    sf::Vertex line[] =
-                    {
-                        sf::Vertex(sf::Vector2f(shiftX + beginX + gradSize + i, shiftY + beginY + backSize - 1 - plot[i]), color),
-                        sf::Vertex(sf::Vector2f(shiftX + beginX + gradSize + i + 1, shiftY + beginY + backSize - 1 - plot[i + 1]), color)
-                    };
+                    sf::Color::Black,
+                    sf::Color::Red,
+                    sf::Color::Green,
+                    sf::Color::Blue
+                };
 
-                    window->getSfWindow().draw(line, 2, sf::Lines);
+                for (int chanel = Lim - 1; chanel >= Min; chanel--)
+                {
+                    auto plot = chanelToPlot[chanel];
+                    auto color = chanelToColor[chanel];
+
+                    for (int i = 0; i != backSize - 1; i++)
+                    {
+                        sf::Vertex line[] =
+                        {
+                            sf::Vertex(sf::Vector2f(shiftX + beginX + gradSize + i, shiftY + beginY + backSize - 1 - plot[i]), color),
+                            sf::Vertex(sf::Vector2f(shiftX + beginX + gradSize + i + 1, shiftY + beginY + backSize - 1 - plot[i + 1]), color)
+                        };
+
+                        window->getSfWindow().draw(line, 2, sf::Lines);
+                    }
                 }
 
-                for (int i = 0; i != points.size(); i++)
+                sf::Color pColor = sf::Color::Black;
+                sf::Color grabColor = sf::Color::Magenta;
+
+                for (int chanel = Lim - 1; chanel >= Min; chanel--)
                 {
-                    auto point = points[i];
+                    auto& points = *chanelToPoints[chanel];
 
-                    sf::Color pColor = { 0, 0, 160 };
-                    sf::Color grabColor = { 160, 0, 0 };
+                    for (int i = 0; i != points.size(); i++)
+                    {
+                        auto point = points[i];
 
-                    int const pSize = 9;
-                    sf::RectangleShape rect({ pSize, pSize });
-                    rect.setPosition(sf::Vector2f(-(pSize + 1) / 2 + shiftX + beginX + gradSize + point.x, -(pSize + 1) / 2 + shiftY + beginY + backSize - 1 - point.y));
-                    rect.setFillColor((i == grabbedPoint) ? grabColor : pColor);
-                    window->getSfWindow().draw(rect);
+                        int const pSize = 9;
+                        sf::RectangleShape rect({ pSize, pSize });
+                        rect.setPosition(sf::Vector2f(-(pSize + 1) / 2 + shiftX + beginX + gradSize + point.x, -(pSize + 1) / 2 + shiftY + beginY + backSize - 1 - point.y));
+                        rect.setFillColor((i == grabbedPoint.index) && (chanel == grabbedPoint.chanel) ? grabColor : pColor);
+                        window->getSfWindow().draw(rect);
+                    }
                 }
             }
 
@@ -161,74 +199,116 @@ namespace JIMP
                 return JG::Widget::HandlerResponce::Success;
             }
 
-            protected:
-                bool changed = false;
-                std::vector<SplinePoint> points;
-                int plot[backSize];
-                JG::Image fullImage;
+        protected:
+            bool changed = false;
+            static int const nChanels = 3;
 
-                int grabbedPoint = 1;
+            std::vector<SplinePoint> rPoints,
+                gPoints,
+                bPoints;
 
-                void recalcPlot()
+            int rPlot[backSize],
+                gPlot[backSize],
+                bPlot[backSize];
+
+            int* chanelToPlot[nChanels + 1] =
+            {
+                nullptr,
+                rPlot,
+                gPlot,
+                bPlot
+            };
+
+            std::vector<SplinePoint>* chanelToPoints[nChanels + 1] =
+            {
+                nullptr,
+                &rPoints,
+                &gPoints,
+                &bPoints
+            };
+
+            JG::Image fullImage;
+
+            struct GrabPoint
+            {
+                Chanel chanel;
+                std::vector<SplinePoint>* points;
+                int* plot;
+                int index;
+            };
+
+            GrabPoint grabbedPoint = {};
+
+            void recalcPlot(std::vector<SplinePoint>& points, int* plot)
+            {
+                assert(points.size() >= 2);
+                assert(points.front().x == 0);
+                assert(points.back().x == backSize - 1);
+
+                int index = 0;
+                for (int i = 0; i != backSize; i++)
                 {
-                    assert(points.size() >= 2);
-                    assert(points.front().x == 0);
-                    assert(points.back().x == backSize - 1);
+                    assert(points[index].x != points[index + 1].x);
 
-                    int index = 0;
-                    for (int i = 0; i != backSize; i++)
-                    {
-                        assert(points[index].x != points[index + 1].x);
+                    if (points[index + 1].x < i)
+                        index++;
 
-                        if (points[index + 1].x < i)
-                            index++;
-                        
-                        double coef = ((double)points[index].y - (double)points[index + 1].y) / ((double)points[index].x - (double)points[index + 1].x);                        
-                        plot[i] = (double)points[index].y + (int)(coef * (i - (double)points[index].x));
-                    }
-
-                    changed = true;
+                    double coef = ((double)points[index].y - (double)points[index + 1].y) / ((double)points[index].x - (double)points[index + 1].x);
+                    plot[i] = (double)points[index].y + (int)(coef * (i - (double)points[index].x));
                 }
 
-                void deletePoint()
-                {
-                    if (grabbedPoint == -1 || grabbedPoint == 0 || grabbedPoint == points.size() - 1)
-                        return;
+                changed = true;
+            }
 
-                    points.erase(points.begin() + grabbedPoint);
-                    // releasePoint();
-                    recalcPlot();
+            void deletePoint()
+            {
+                if (grabbedPoint.chanel == None ||
+                    grabbedPoint.index == 0 ||
+                    grabbedPoint.index == grabbedPoint.points->size() - 1)
+                    return;
+
+                grabbedPoint.points->erase(grabbedPoint.points->begin() + grabbedPoint.index);
+                recalcPlot(*grabbedPoint.points, grabbedPoint.plot);
+                releasePoint();
+            }
+
+            void releasePoint()
+            {
+                grabbedPoint = {};
+            }
+
+            void movePoint(int shiftX, int shiftY)
+            {
+                if (!grabbedPoint.chanel)
+                    return;
+
+                auto& points = *grabbedPoint.points;
+                auto plot = grabbedPoint.plot;
+
+                points[grabbedPoint.index].y += shiftY;
+                points[grabbedPoint.index].y = std::min(points[grabbedPoint.index].y, backSize - 1);
+                points[grabbedPoint.index].y = std::max(points[grabbedPoint.index].y, 0);
+
+                if (grabbedPoint.index != 0 && grabbedPoint.index != points.size() - 1)
+                {
+                    points[grabbedPoint.index].x += shiftX;
+                    points[grabbedPoint.index].x = std::min(points[grabbedPoint.index].x, backSize - 1);
+                    points[grabbedPoint.index].x = std::max(points[grabbedPoint.index].x, 0);
+
+                    if (points[grabbedPoint.index].x <= points[grabbedPoint.index - 1].x || points[grabbedPoint.index].x >= points[grabbedPoint.index + 1].x)
+                        deletePoint();
                 }
 
-                void releasePoint()
+                recalcPlot(points, plot);
+            }
+
+            void grabPoint(int x, int y)
+            {
+                for (int chanel = Min; chanel < Lim; chanel++)
                 {
-                    grabbedPoint = -1;
-                }
+                    auto plot = chanelToPlot[chanel];
+                    auto& points = *chanelToPoints[chanel];
 
-                void movePoint(int shiftX, int shiftY)
-                {
-                    if (grabbedPoint == -1)
-                        return;
-
-                    points[grabbedPoint].y += shiftY;
-                    points[grabbedPoint].y = std::min(points[grabbedPoint].y, backSize - 1);
-                    points[grabbedPoint].y = std::max(points[grabbedPoint].y, 0);
-
-                    if (grabbedPoint != 0 && grabbedPoint != points.size() - 1)
-                    {
-                        points[grabbedPoint].x += shiftX;
-                        points[grabbedPoint].x = std::min(points[grabbedPoint].x, backSize - 1);
-                        points[grabbedPoint].x = std::max(points[grabbedPoint].x, 0);
-
-                        if (points[grabbedPoint].x <= points[grabbedPoint - 1].x || points[grabbedPoint].x >= points[grabbedPoint + 1].x)
-                            deletePoint();
-                    }
-
-                    recalcPlot();
-                }
-
-                void grabPoint(int x, int y)
-                {
                     x = std::min(x, backSize - 1);
                     x = std::max(x, 0);
 
@@ -236,35 +316,61 @@ namespace JIMP
                     y = std::max(y, 0);
 
                     int dist = 9;
+                    int i = 0;
+
                     if ((int)abs(y - plot[x]) > dist)
                     {
                         releasePoint();
-                        return;
+                        goto nextChanel;
                     }
-                    
-                    int i = 0;
 
-                    for(; i != points.size(); i++)
+
+                    for (; i != points.size(); i++)
                     {
                         if ((int)abs(y - points[i].y) <= dist && (int)abs(x - points[i].x) <= dist)
                         {
-                            grabbedPoint = i;
+                            grabbedPoint = { (Chanel)chanel, &points, plot, i };
                             return;
                         }
 
                         if (points[i].x > x)
-                            break;                        
+                            break;
                     }
 
                     points.insert(points.begin() + i, { x, y });
-                    grabbedPoint = i;
-                    recalcPlot();
-                }
+                    grabbedPoint = { (Chanel)chanel, &points, plot, i };
+                    recalcPlot(*grabbedPoint.points, grabbedPoint.plot);
+                    return;
 
-                void nextPoint()
-                {
-                    grabbedPoint = (grabbedPoint + 1) % points.size();
+                nextChanel:
+                    ;
                 }
+            }
+
+            void nextPoint()
+            {
+                if (!grabbedPoint.chanel)
+                    grabbedPoint =
+                {
+                    .chanel = R,
+                    .points = &rPoints,
+                    .plot = rPlot,
+                    .index = -1,
+                };
+
+
+
+                grabbedPoint.index = grabbedPoint.index + 1;
+
+                if (grabbedPoint.index == grabbedPoint.points->size())
+                {
+                    grabbedPoint.chanel = (Chanel)(1 + (grabbedPoint.chanel + 1) % (Lim - Min));
+                    grabbedPoint.points = chanelToPoints[grabbedPoint.chanel];
+                    grabbedPoint.plot = chanelToPlot[grabbedPoint.chanel];
+                    grabbedPoint.index = 0;
+                }
+            }
+                
         };
     }
 }

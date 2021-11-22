@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    Vector2i is a struct that holds two integers.
 
 Author / Creation date:
 

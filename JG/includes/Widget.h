@@ -8,7 +8,10 @@ Module Name:
 
 Abstract:
 
-    Widget class defenition
+    Widget is an abstract class that handles other widgets
+    within itself, manages incoming events and reacts to them.
+    All widgets have a pointer to its Window for rendering and
+    adding children.
 
 Author / Creation date:
 
@@ -177,6 +180,7 @@ namespace JG
         virtual HandlerResponce onMouseButtonReleased(Event event) override final;
         virtual HandlerResponce onMouseEntered(Event event) override final;
         virtual HandlerResponce onMouseLeft(Event event) override final;
+        virtual HandlerResponce onKeyPressed(Event event) override;
         virtual void renderMyself(int shiftX, int shiftY) override;
 
         virtual HandlerResponce onClick(Event event);
@@ -252,6 +256,7 @@ namespace JG
 
                 virtual void renderMyself(int shiftX, int shiftY) override;
                 virtual HandlerResponce onClick(Event event) override;
+                virtual HandlerResponce onKeyPressed(Event event) override;
             };
 
             PanelBar(Window* window, Panel* panel, int beginX, int beginY, int width);

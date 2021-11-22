@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    Empty file -- currently there are no big
+    Events specific functions.
 
 Author / Creation date:
 

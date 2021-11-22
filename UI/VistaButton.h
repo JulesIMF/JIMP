@@ -4,11 +4,11 @@ Copyright (c) 2021 JulesIMF, MIPT
 
 Module Name:
 
-    VistaPanel.h
+    VistaButton.h
 
 Abstract:
 
-
+    Vista-style button.
 
 Author / Creation date:
 

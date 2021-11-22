@@ -8,13 +8,14 @@ Module Name:
 
 Abstract:
 
-    BMP format module
+    BMP format module.
 
 Author / Creation date:
 
     JulesIMF / 17.10.21
 
 Revision History:
+	22.11.21  10:32		Only load released
 
 --*/
 

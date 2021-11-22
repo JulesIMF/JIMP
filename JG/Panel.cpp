@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    Panel is a sub-window that has its title bar with
+    Close button.
 
 Author / Creation date:
 
@@ -162,6 +163,11 @@ void Panel::PanelBar::PanelCloseButton::renderMyself(int shiftX, int shiftY)
         };
         window->getSfWindow().draw(cross, 2, sf::Points);
     }
+}
+
+Widget::HandlerResponce Panel::PanelBar::PanelCloseButton::onKeyPressed(Event event)
+{
+    return Widget::HandlerResponce::Failure;
 }
 
 Widget::HandlerResponce Panel::onMouseButtonPressed(Event event)

@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    BMP format header.
 
 Author / Creation date:
 

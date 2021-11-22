@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    Tool picker contains all the tools in the application.
+    It is available for all editors and is not unique.
 
 Author / Creation date:
 

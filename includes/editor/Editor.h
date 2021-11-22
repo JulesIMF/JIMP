@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    Editor mixes layers into one image.
 
 Author / Creation date:
 

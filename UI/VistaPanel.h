@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-
+    Vista-style panel.
 
 Author / Creation date:
 

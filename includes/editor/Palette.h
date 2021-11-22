@@ -8,7 +8,9 @@ Module Name:
 
 Abstract:
 
-    
+    Palette is JG::Widget that allows to pick
+    HUE color visually. Once color is changed,
+    Palette sends it to all Tools via ToolPicker.
 
 Author / Creation date:
 

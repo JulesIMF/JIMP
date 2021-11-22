@@ -8,7 +8,10 @@ Module Name:
 
 Abstract:
 
-    
+    Widget is an abstract class that handles other widgets
+    within itself, manages incoming events and reacts to them.
+    All widgets have a pointer to its Window for rendering and 
+    adding children.
 
 Author / Creation date:
 

@@ -4,11 +4,11 @@ Copyright (c) 2021 JulesIMF, MIPT
 
 Module Name:
 
-    VistaPanel.h
+    VistaSlider.h
 
 Abstract:
 
-
+    Vista-style slider.
 
 Author / Creation date:
 

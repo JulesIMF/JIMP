@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    UI is a header that describes JIMP UI.
 
 Author / Creation date:
 
@@ -258,10 +258,10 @@ namespace JIMP
 
                 if (fileName)
                 {
-                    FILE* file = fopen(filename, "r");
+                    FILE* file = fopen(fileName, "r");
                     if (!file)
                     {
-                        errorMessage("Wrong file");
+                        errorMessage("Wrong file \"%s\"", fileName);
                     }
 
                     else
@@ -480,7 +480,6 @@ namespace JIMP
         class CurvesPanel : public VistaPanel
         {
         public:
-
             struct ApplyButton : public VistaButton
             {
                 ApplyButton(JG::Window* window, int beginX, int beginY, int width, CurvesPanel* panel) :
@@ -506,7 +505,7 @@ namespace JIMP
                 layer(layer),
                 editorCanvas(editorCanvas),
                 spline(new Spline (window, space, space)),
-                curves(layer, spline->getPlot())
+                curves(layer, spline->getPlot(Spline::R), spline->getPlot(Spline::G), spline->getPlot(Spline::B))
             {
                 caption = "Curves";
                 addChild(spline);
@@ -543,6 +542,46 @@ namespace JIMP
             JIMP::Curves curves;
         };
 
+        struct OpenBmpPanel : public VistaPanel
+        {
+            static int const bmpPanelWidth = 300;
+
+            struct OpenButton : public VistaButton
+            {
+                OpenButton(JG::Window* window, int beginX, int beginY, int width, OpenBmpPanel* panel) :
+                    VistaButton(window, beginX, beginY, width),
+                    panel(panel)
+                {
+                    caption = "Open by name";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new EditorCanvasPanel(window, panel->textBox->getText()));
+                    panel->closePanel();
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                OpenBmpPanel* panel;
+            };
+
+            OpenBmpPanel(JG::Window* window, int width = bmpPanelWidth + 2 * space, int height = space * 3 + OpenButton::buttonHeight + VistaTextBox::tbHeight) :
+                VistaPanel(window,
+                           (windowWidth - width) / 2, 
+                           (windowHeight - height) / 2,
+                           width,
+                           height)
+                {
+                    caption = "Open BMP file";
+                    addChild(textBox = new VistaTextBox(window, space, space, width - 2 * space));
+                    addChild(button = new OpenButton(window, space, space * 2 + VistaTextBox::tbHeight, width - 2 * space, this));
+                }
+
+            OpenButton* button;
+            VistaTextBox* textBox;
+        };
+
         struct MainWindowMenuStrip : public VistaMenuStrip
         {
             struct ExitItem : public VistaMenuItem
@@ -557,6 +596,21 @@ namespace JIMP
                 {
                     debugMessage("Exit...");
                     window->sendEvent(JG::Event::CloseEvent());
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+            struct OpenBmpItem : public VistaMenuItem
+            {
+                OpenBmpItem(JG::Window* window) :
+                    VistaMenuItem(window, "Open BMP file")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new OpenBmpPanel(window));
                     return JG::Widget::HandlerResponce::Success;
                 }
             };
@@ -653,6 +707,7 @@ namespace JIMP
 
                 VistaMenu* fileMenu = new VistaMenu(window, file);
                 fileMenu->addChild(new ExitItem(window));
+                fileMenu->addChild(new OpenBmpItem(window));
                 file->setMenu(fileMenu);
 
                 VistaMenu* panelsMenu = new VistaMenu(window, panels);
@@ -692,6 +747,7 @@ namespace JIMP
                 // addChild(new TestPanel(this));
 
                 addChild(new MainWindowMenuStrip(this));
+                timerTickIntervalMs = 50;
 
                 // addChild(new Bublick(this, 0, 0));
             }

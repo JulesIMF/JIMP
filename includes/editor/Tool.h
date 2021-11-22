@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    
+    Tool is an abstraction that changes given layer in
+    a specific way.
 
 Author / Creation date:
 

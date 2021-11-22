@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    Button class defenition
+    Button class defenition (simple gray rectangle).
 
 Author / Creation date:
 
@@ -108,6 +108,18 @@ Widget::HandlerResponce Button::onMouseButtonReleased(Event event)
         
     window->sendEvent(Event::PaintEvent());
     return Widget::HandlerResponce::Success;
+}
+
+Widget::HandlerResponce Button::onKeyPressed(Event event)
+{
+    // setCurrentRectangle();
+    if(event.key.code == Keyboard::Enter)
+    {
+        onClick(event);
+        return Widget::HandlerResponce::Success;
+    }
+
+    return Widget::HandlerResponce::Failure;
 }
 
 void Button::setCurrentRectangle()

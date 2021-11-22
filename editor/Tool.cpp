@@ -8,13 +8,15 @@ Module Name:
 
 Abstract:
 
-    
+    Tool is an abstraction that changes given layer in
+    a specific way.
 
 Author / Creation date:
 
     JulesIMF / 18.10.21
 
 Revision History:
+	22.11.21  22:29		Three "on": on press, on move and on release. Should add on timer
 
 --*/
 

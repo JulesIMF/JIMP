@@ -8,7 +8,17 @@ Module Name:
 
 Abstract:
 
-    An abstract JG for a graphics library.
+    Window is a class that holds sf::Window and first
+    proceeds all events. For better logic it was made
+    as JG::Widget derivative: it allowes to add Widgets
+    with addChild(...) and proceed events just by calling
+    corresponding JG:on... with the event. But user CAN
+    proceed events by himself --- once event proceeded 
+    (or not) by a handler (on... function), pollEvent 
+    returns it to the user.
+
+    Note that user MUST constantly call pollEvent() to let JG
+    proceed incoming SFML events.
 
 Author / Creation date:
 

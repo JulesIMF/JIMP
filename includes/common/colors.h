@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    Color escapes.
+    Color escapes for UNIX terminals.
 
 Author / Creation date:
 

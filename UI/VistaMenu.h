@@ -4,11 +4,11 @@ Copyright (c) 2021 JulesIMF, MIPT
 
 Module Name:
 
-    VistaPanel.h
+    VistaMenu.h
 
 Abstract:
 
-
+    Vista-style menu.
 
 Author / Creation date:
 

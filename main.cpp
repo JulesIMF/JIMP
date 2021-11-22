@@ -8,7 +8,8 @@ Module Name:
 
 Abstract:
 
-    Main JIMP module.
+    Main JIMP module. Only runs the window and
+    proceeds incoming events.
 
 Author / Creation date:
 

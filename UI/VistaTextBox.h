@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    
+    Vista-style text box.
 
 Author / Creation date:
 
@@ -126,6 +126,9 @@ namespace JIMP
             {
                 switch (event.key.code)
                 {
+                case JG::Keyboard::Enter:
+                    return JG::Widget::HandlerResponce::Failure;
+
                 case JG::Keyboard::Left:
                     inc(-1, event.key.shift);
                     break;
