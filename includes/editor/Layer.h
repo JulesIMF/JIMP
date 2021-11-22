@@ -25,6 +25,7 @@ Revision History:
 // Includes / usings
 //
 
+#include <string>
 #include <JG.h>
 
 //
@@ -39,16 +40,57 @@ namespace JIMP
         int width, height;
 
         JG::Color** image;
+        JG::Color** preview;
 
-        void init()
+        std::string name;
+
+        void init(char const* name = "")
         {
-            image = new JG::Color * [width];
+            image = new JG::Color* [width];
             for (int x = 0; x != width; x++)
             {
                 image[x] = new JG::Color[height];
                 for (int y = 0; y != height; y++)
                     image[x][y] = { 255, 255, 255 , 0};
             }
+
+            preview = image;
+            this->name = name;
+        }
+
+        void onCorrectionBegin()
+        {
+            preview = new JG::Color* [width];
+            for (int x = 0; x != width; x++)
+            {
+                preview[x] = new JG::Color[height];
+                memcpy(preview[x], image[x], sizeof(JG::Color) * height);
+            }
+        }
+
+        void onCorrectionEnd()
+        {
+            for (int x = 0; x != width; x++)
+            {
+                memcpy(image[x], preview[x], sizeof(JG::Color) * height);
+                delete[] preview[x];
+            }
+
+            delete[] preview;
+            preview = image;
+        }
+
+        void onCorrectionReset()
+        {
+            if (preview == image)
+                return;
+                
+            for (int x = 0; x != width; x++)
+                delete[] preview[x];
+
+            delete[] preview;
+
+            preview = image;
         }
 
         void free()

@@ -36,6 +36,9 @@ BMP JIMP::loadImage(FILE* file)
 {
     BMP bmp = {};
 
+    if (file == nullptr)
+        return bmp;
+
     BITMAPFILEHEADER fileHeader = {};
     BITMAPINFOHEADER infoHeader = {};
 

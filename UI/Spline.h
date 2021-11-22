@@ -55,9 +55,23 @@ namespace JIMP
                 fullImage(0, 0, fullSize, fullSize, "resources/images/Spline/back_grad.png")
             {
                 points.push_back({ 0, 0 });
-                points.push_back({ 134, 169 });
                 points.push_back({ backSize - 1, backSize - 1 });
                 recalcPlot();
+            }
+
+            int const* getPlot()
+            {
+                return plot;
+            }
+
+            void flush()
+            {
+                changed = false;
+            }
+
+            bool isChanged()
+            {
+                return changed;
             }
 
             virtual void renderMyself(int shiftX, int shiftY) override
@@ -148,6 +162,7 @@ namespace JIMP
             }
 
             protected:
+                bool changed = false;
                 std::vector<SplinePoint> points;
                 int plot[backSize];
                 JG::Image fullImage;
@@ -171,6 +186,8 @@ namespace JIMP
                         double coef = ((double)points[index].y - (double)points[index + 1].y) / ((double)points[index].x - (double)points[index + 1].x);                        
                         plot[i] = (double)points[index].y + (int)(coef * (i - (double)points[index].x));
                     }
+
+                    changed = true;
                 }
 
                 void deletePoint()

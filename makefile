@@ -45,7 +45,7 @@ FILES   = $(OBJ)main.o \
 		  $(OBJ)editor/Layer.o \
 		  $(OBJ)file/BMP.o
 
-UI		= UI/UI.h UI/VistaButton.h UI/VistaPanel.h UI/VistaSlider.h UI/VistaTextBox.h UI/Spline.h UI/VistaMenu.h
+UI		= UI/UI.h UI/VistaButton.h UI/VistaPanel.h UI/VistaSlider.h UI/VistaTextBox.h UI/Spline.h UI/VistaMenu.h includes/editor/Curves.h
 GREEN   = @echo "\033[0;32m";
 DFLT    = @echo "\033[0;m";
 

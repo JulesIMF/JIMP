@@ -36,14 +36,14 @@ Revision History:
 //
 
 
-#define VERSION "alpha v1.2.3 (27 oct 2021)"
+#define VERSION "alpha v1.3.0 (22 nov 2021)"
 
 void displayInfo(void)
 {        
     printf("\nRunning %sJIMP " VERSION ".%s\n"
            "\t*To open a BMP file, type ./jimp \"<filepath>\".\n"
            "\t*To switch current layer, use Ctrl+PgUp and Ctrl+PgDown.\n"
-           "\t*To switch instrument, use PgUp and PgDown.\n\n", TerminalColor::BlueB, TerminalColor::Default);
+           "\t*To switch tool, use PgUp and PgDown.\n\n", TerminalColor::BlueB, TerminalColor::Default);
 }
 
 int main(int argc, char const** argv)
@@ -51,12 +51,17 @@ int main(int argc, char const** argv)
     displayInfo();
     setDebug(true);
 
-    JIMP::UI::MainWindow window(JIMP::UI::windowWidth, JIMP::UI::windowHeight);
+    if (argc == 1)
+    {
+        warningMessage("No file specified!");
+    }
 
-    // if (argc == 1)
-    // {
-    //     warningMessage("No file specified!");
-    // }
+    else
+    {
+        JIMP::UI::filename = argv[1];
+    }
+
+    JIMP::UI::MainWindow window(JIMP::UI::windowWidth, JIMP::UI::windowHeight);
 
     // else
     // {

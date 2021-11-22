@@ -76,7 +76,7 @@ void Editor::mix(std::vector<Layer*>& layers)
 
             for (int y = std::max(beginShiftY, 0); y < endY; y++)
             {
-                image[x][y] = mixColors(image[x][y], layer->image[layerX][y - beginShiftY]);
+                image[x][y] = mixColors(image[x][y], layer->preview[layerX][y - beginShiftY]);
             }
         }
     }

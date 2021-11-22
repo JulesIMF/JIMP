@@ -168,7 +168,7 @@ namespace JIMP
             virtual JG::Widget::HandlerResponce onTimer(JG::Event event) override
             {
                 showCursor = ( (1 + event.timer.timeMs / blinkIntMs) ) & 1;
-                return JG::Widget::HandlerResponce::Success;
+                return JG::Widget::HandlerResponce::SuccessYield;
             }
 
         protected:
