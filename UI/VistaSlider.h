@@ -51,10 +51,10 @@ namespace JIMP
             struct VistaThumb : public JG::Widget
             {
                 static int const thumbHeight = 14,
-                    thumbWidth = 8;
+                                 thumbWidth = 8;
 
                 VistaThumb(JG::Window* window, VistaSlider* slider) :
-                    JG::Widget(window, 0, 0, thumbHeight, thumbWidth),
+                    JG::Widget(window, 0, 0, thumbWidth, thumbHeight),
                     thumbImage(0, 0, thumbWidth, thumbHeight, "resources/images/Slider/toggler_hor.png"),
                     slider(slider)
                 {

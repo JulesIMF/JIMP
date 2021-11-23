@@ -31,7 +31,7 @@ set(WARNING_FLAGS "-Wno-multichar -Wno-unused-result -Wno-narrowing")
 
 # add_definitions(NDEBUG)
 
-set(OPT "-O2")
+set(OPT "-O0")
 set(SANITIZE 0)
 
 if(SANITIZE)
