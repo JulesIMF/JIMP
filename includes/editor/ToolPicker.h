@@ -45,6 +45,7 @@ namespace JIMP
         Tool* getTool();
         void insert(Tool* tool);
         void erase(Tool* tool);
+        void selectByName(char const* name);
 
     protected:
         int index = 0;

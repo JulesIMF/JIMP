@@ -82,6 +82,19 @@ void ToolPicker::prevTool()
     free(name);
 }
 
+void ToolPicker::selectByName(char const* name)
+{
+    for (int i = 0; i < tools.size(); i++)
+        if (!strcmp(name, tools.at(i)->getName()))
+        {
+            index = i;
+            debugMessage("found tool \"%s\"", name);
+            return;
+        }
+    
+    warningMessage("cant find tool \"%s\"", name);
+}
+
 void ToolPicker::erase(Tool* tool)
 {
     auto it = std::find(tools.begin(), tools.end(), tool);

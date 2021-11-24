@@ -47,7 +47,7 @@ namespace JIMP
         {
             double positionX = 0, positionY = 0;
             JG::Color keyColor = { 255, 0, 0 };
-            JG::Color color = { 255, 0, 0 };
+            JG::Color color = { 255, 255, 255 };
             Palette* palette;
             void updateKeyColor(JG::Color keyColor);
             JG::Color calcColor(double positionX, double positionY);

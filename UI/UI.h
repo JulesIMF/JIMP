@@ -50,11 +50,15 @@ namespace JIMP
         static int const space        = 40;
         static int const paletteWidth = 350,  paletteHeight = 300;
 
-        static int const buttonWidth  = 200,  buttonHeight  = VistaButton::buttonHeight;
-        static int const switchN      = 2,    switchSpace   = 25;
+        static int const buttonWidth  = 200,  buttonHeight  = VistaButton::buttonHeight,
+                                              switchButtonSize = 32;
+        static int const switchNY     = 2,    switchSpace   = 25,
+                         switchNX     = 4;
 
-        static int const switchWidth  = buttonWidth + 2 * switchSpace,
-                         switchHeight = switchSpace + (switchSpace + buttonHeight) * switchN;
+        static int const switchWidth  = (switchSpace + switchButtonSize) * switchNX + switchSpace,
+                         switchHeight = switchSpace + 
+                                        (switchSpace + switchButtonSize) * switchNY + + VistaSlider::VistaThumb::thumbHeight +
+                                        switchSpace;
 
         class EditorCanvas;
         EditorCanvas* activeCanvas = nullptr;
@@ -118,18 +122,40 @@ namespace JIMP
                 tool->y = y - layer->beginY - editor->shiftY;
             }
 
-            void applyTool(int x, int y, int dx, int dy, bool onMove) // true - applyOnMove, false - applyOnRelease
+            enum onWhat
             {
-                moveTool(x, y, dx, dy);
+                eventOnPress,
+                eventOnMove,
+                eventOnRelease,
+                eventOnTimer,
+            };
+
+            void applyTool(int x, int y, int dx, int dy, onWhat what, int passedMs = 0) // true - applyOnMove, false - applyOnRelease
+            {
+                if (what != eventOnTimer)
+                    moveTool(x, y, dx, dy);
 
                 auto tool = toolPicker->getTool();
                 auto layer = layerSwitcher->getCurrentLayer();
 
-                if (onMove)
+                switch(what)
+                {
+                case eventOnMove:
                     tool->applyOnMove(*layer);
-
-                else
+                    break;
+                
+                case eventOnPress:
                     tool->applyOnPress(*layer);
+                    break;
+
+                case eventOnRelease:
+                    tool->applyOnRelease(*layer);
+                    break;
+
+                case eventOnTimer:
+                    tool->applyOnTimer(*layer, passedMs);
+                    break;
+                }
 
                 editor->mix(layerSwitcher->getLayerVector());
                 window->sendEvent(JG::Event::PaintEvent());                
@@ -137,18 +163,32 @@ namespace JIMP
 
             virtual JG::Widget::HandlerResponce onMouseButtonPressed(JG::Event event) override
             {
-                applyTool(event.mouseButton.x, event.mouseButton.y, event.mouseMove.dx, event.mouseMove.dy, false);
+                applyTool(event.mouseButton.x, event.mouseButton.y, event.mouseMove.dx, event.mouseMove.dy, eventOnPress);
+                return JG::Widget::HandlerResponce::Success;
+            }
+
+            virtual JG::Widget::HandlerResponce onMouseButtonReleased(JG::Event event) override
+            {
+                applyTool(event.mouseButton.x, event.mouseButton.y, event.mouseMove.dx, event.mouseMove.dy, eventOnRelease);
                 return JG::Widget::HandlerResponce::Success;
             }
 
             virtual JG::Widget::HandlerResponce onMouseMoved(JG::Event event) override
             {
                 if (mousePressed)                
-                    applyTool(event.mouseMove.x, event.mouseMove.y, event.mouseMove.dx, event.mouseMove.dy, true);
+                    applyTool(event.mouseMove.x, event.mouseMove.y, event.mouseMove.dx, event.mouseMove.dy, eventOnMove);
                 else
                     moveTool(event.mouseMove.x, event.mouseMove.y, event.mouseMove.dx, event.mouseMove.dy);
 
                 return JG::Widget::HandlerResponce::Success;
+            }
+
+            virtual JG::Widget::HandlerResponce onTimer(JG::Event event) override
+            {
+                if (mousePressed && toolPicker->getTool()->timerTool)
+                   applyTool(0, 0, 0, 0, eventOnTimer, event.timer.passedMs);
+                
+                return JG::Widget::HandlerResponce::SuccessYield;
             }
 
             virtual JG::Widget::HandlerResponce onKeyPressed(JG::Event event) override
@@ -313,66 +353,6 @@ namespace JIMP
 
             static int nAdded;
         };
-        
-        class Bublick : public JG::Panel
-        {
-        public:
-            static int const bublickWidth = 300, bublickHeight = 300;
-
-            class BublickBar : public JG::Panel::PanelBar
-            {
-            public:
-                static int const bbarWidth = 300, bbarHeight = 105;
-                BublickBar(JG::Window* window, Bublick* bublick, int beginX, int beginY) :
-                    JG::Panel::PanelBar(window, bublick, beginX, beginY, bbarWidth),
-                    barImage(0, 0, bbarWidth, bbarHeight, "UI/debug/bar.png")
-                {
-                    height = bbarHeight;
-                    auto button = children.at(0);
-                    button->setPosition((bbarWidth - JG::Panel::PanelBar::barHeight) / 2,
-                                        (bbarHeight - JG::Panel::PanelBar::barHeight) / 2);
-                }
-
-                virtual void renderMyself(int shiftX, int shiftY) override
-                {
-                    translateAndDraw(barImage, window, shiftX + beginX, shiftY + beginY);
-                }
-
-                virtual bool checkHover(int x, int y)
-                {
-                    return barImage.getPixel(x, y).a;
-                }
-
-            protected:    
-                JG::Image barImage;
-            };
-
-            Bublick(JG::Window* window, int beginX, int beginY) :
-                JG::Panel(window, beginX, beginY, bublickWidth, bublickHeight),
-                roundImage(0, 0, bublickWidth, bublickHeight, "UI/debug/round.png")
-            {
-                children.clear();
-                addChild(new BublickBar(window, this, 0, 0));
-            }
-
-            virtual void addChild(JG::Widget* widget)
-            {
-                Widget::addChild(widget);
-            }
-
-            virtual void renderMyself(int shiftX, int shiftY) override
-            {
-                translateAndDraw(roundImage, window, shiftX + beginX, shiftY + beginY, 0, mousePressed * bublickHeight);
-            }
-
-            virtual bool checkHover(int x, int y)
-            {
-                return roundImage.getPixel(x, y).a;
-            }
-
-        protected:
-            JG::Image roundImage;
-        };
 
         int EditorCanvasPanel::nAdded = 0;
 
@@ -395,6 +375,41 @@ namespace JIMP
                 }
             };
 
+            class ToolSwitch : public JG::Button
+            {
+            public:
+                ToolSwitch(JG::Window* window, int beginX, int beginY, char const* name, char const* imageName):
+                    JG::Button(window, beginX, beginY, switchButtonSize, switchButtonSize),
+                    image(0, 0, switchButtonSize, switchButtonSize, imageName),
+                    toolName(name)
+                {
+
+                }
+
+                virtual void renderMyself(int shiftX, int shiftY) override
+                {
+                    int moveTexture = 0;
+
+                    if (mouseOn)
+                        moveTexture += height;
+
+                    if (mousePressed)
+                        moveTexture += height;
+
+                    translateAndDraw(image, window, beginX + shiftX, beginY + shiftY, 0, moveTexture);
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event) override
+                {
+                    toolPicker->selectByName(toolName);
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                JG::Image image;
+                char const* toolName;
+            };
+
             struct ThicknessSlider : public VistaSlider
             {
                 ThicknessSlider(JG::Window* window, int beginX, int beginY, int width, float to = 100, float from = 0) : 
@@ -413,14 +428,23 @@ namespace JIMP
             ToolPickerPanel(JG::Window* window) : 
                 VistaPanel(window, VistaPanel::vistaOutline, (windowHeight - editorHeight) / 2, switchWidth, switchHeight)
             {
-                // addChild(new AddEditor(window, switchSpace, switchSpace,
-                //                                  buttonWidth));
+                int y = switchSpace;
+                int x = -switchButtonSize;
 
-                addChild(new NextTool(window, switchSpace, switchSpace,
-                                                      buttonWidth));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Brush", "resources/images/ToolsSelectors/Brush.png"));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Pen", "resources/images/ToolsSelectors/Pen.png"));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Airbrush", "resources/images/ToolsSelectors/Airbrush.png"));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Fill", "resources/images/ToolsSelectors/Fill.png"));
+                y = switchSpace * 2 + switchButtonSize;
+                x = -switchButtonSize;
 
-                addChild(new ThicknessSlider(window, switchSpace, 2 * switchSpace + VistaButton::buttonHeight,
-                                                     buttonWidth));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Eraser", "resources/images/ToolsSelectors/Eraser.png"));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Rectangle", "resources/images/ToolsSelectors/Rectangle.png"));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Eyedropper", "resources/images/ToolsSelectors/Eyedropper.png"));
+                addChild(new ToolSwitch(window, x += (switchButtonSize + switchSpace), y, "Drag", "resources/images/ToolsSelectors/Drag.png"));
+
+                addChild(new ThicknessSlider(window, switchSpace, 3 * switchSpace + 2 * switchButtonSize,
+                                                     width - 2 * switchSpace));
 
                 setCaption();
             }
@@ -448,17 +472,6 @@ namespace JIMP
                 strcat(captionConcat, suffix);
 
                 caption = captionConcat;
-            }
-        };
-
-        class TestPanel : public VistaPanel
-        {
-        public:
-            TestPanel(JG::Window* window) :
-                VistaPanel(window, 0, 0, 2 * space + Spline::fullSize, switchHeight + Spline::fullSize + space)
-            {
-                addChild(new VistaTextBox(window, space, space, width - 2 * space, "papa u vani silen v matematike"));
-                addChild(new Spline(window, space, switchHeight));
             }
         };
 
@@ -679,21 +692,6 @@ namespace JIMP
                 }
             };
 
-            struct TestItem : public VistaMenuItem
-            {
-                TestItem(JG::Window* window) :
-                    VistaMenuItem(window, "Test panel")
-                {
-
-                }
-
-                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
-                {
-                    window->addChild(new TestPanel(window));
-                    return JG::Widget::HandlerResponce::Success;
-                }
-            };
-
 
             MainWindowMenuStrip(JG::Window* window) :
                 VistaMenuStrip(window)
@@ -714,7 +712,6 @@ namespace JIMP
                 panelsMenu->addChild(new PaletteItem(window));
                 panelsMenu->addChild(new SwitcherItem(window));
                 panelsMenu->addChild(new CanvasItem(window));
-                panelsMenu->addChild(new TestItem(window));
                 panels->setMenu(panelsMenu);
 
                 VistaMenu* correctionMenu = new VistaMenu(window, correction);
@@ -736,20 +733,20 @@ namespace JIMP
                 toolPicker = new ToolPicker;
                 toolPicker->insert(new Brush);
                 toolPicker->insert(new Eraser);
+                toolPicker->insert(new Pen);
                 toolPicker->insert(new Fill);
+                toolPicker->insert(new Airbrush);
+                toolPicker->insert(new Rectangle);
                 toolPicker->insert(new Drag);
+                toolPicker->insert(new Eyedropper(toolPicker));
 
                 addChild(mainEditorCanvasPanel = new EditorCanvasPanel(this, filename));
 
                 addChild(new ToolPickerPanel(this));
                 addChild(new PalettePanel(this));
 
-                // addChild(new TestPanel(this));
-
                 addChild(new MainWindowMenuStrip(this));
                 timerTickIntervalMs = 50;
-
-                // addChild(new Bublick(this, 0, 0));
             }
 
             virtual void renderMyself(int shiftX, int shiftY)

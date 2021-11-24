@@ -95,12 +95,23 @@ namespace JIMP
             preview = image;
         }
 
+        void resetPreview()
+        {
+            for (int x = 0; x != width; x++)
+                memcpy(preview[x], image[x], sizeof(JG::Color) * height);
+        }
+
         void free()
         {
             for (int x = 0; x != width; x++)
                 delete[] image[x];
 
             delete[] image;
+        }
+
+        JG::Color*& operator[](int index)
+        {
+            return image[index];
         }
     };
 
