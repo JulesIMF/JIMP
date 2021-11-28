@@ -406,6 +406,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+plugins/api.o: plugins/api.cpp.o
+
+.PHONY : plugins/api.o
+
+# target to build an object file
+plugins/api.cpp.o:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/api.cpp.o
+.PHONY : plugins/api.cpp.o
+
+plugins/api.i: plugins/api.cpp.i
+
+.PHONY : plugins/api.i
+
+# target to preprocess a source file
+plugins/api.cpp.i:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/api.cpp.i
+.PHONY : plugins/api.cpp.i
+
+plugins/api.s: plugins/api.cpp.s
+
+.PHONY : plugins/api.s
+
+# target to generate assembly for a file
+plugins/api.cpp.s:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/api.cpp.s
+.PHONY : plugins/api.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -446,6 +473,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... plugins/api.o"
+	@echo "... plugins/api.i"
+	@echo "... plugins/api.s"
 .PHONY : help
 
 

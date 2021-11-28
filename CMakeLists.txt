@@ -31,7 +31,7 @@ set(WARNING_FLAGS "-Wno-multichar -Wno-unused-result -Wno-narrowing")
 
 # add_definitions(NDEBUG)
 
-set(OPT "-O0")
+set(OPT "-O2")
 set(SANITIZE 0)
 
 if(SANITIZE)
@@ -42,7 +42,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${OPT} ${WARNING_FLAGS} ${ASAN} -g")
 set(SFML_BUILD_GRAPHICS true)
-
+	
 #
 # Building
 #
@@ -64,8 +64,9 @@ add_executable(jimp
 		editor/LayerSwitcher.cpp
 		editor/Layer.cpp
 		file/BMP.cpp
+		plugins/api.cpp
 ) 
 
 find_library(JG libJG.a JG)
 
-target_link_libraries(jimp JG sfml-graphics sfml-window sfml-system)
+target_link_libraries(jimp JG sfml-graphics sfml-window sfml-system dl)

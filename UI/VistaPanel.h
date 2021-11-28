@@ -145,7 +145,7 @@ namespace JIMP
 
             virtual void addChild(Widget* widget) override
             {
-                widget->beginY += VistaPanelBar::vistaBarHeight;
+                widget->beginY += VistaPanelBar::vistaBarHeight + 1;
                 Widget::addChild(widget);
             }
 
