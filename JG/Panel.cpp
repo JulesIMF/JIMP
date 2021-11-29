@@ -167,6 +167,9 @@ void Panel::PanelBar::PanelCloseButton::renderMyself(int shiftX, int shiftY)
 
 Widget::HandlerResponce Panel::PanelBar::PanelCloseButton::onKeyPressed(Event event)
 {
+    if (event.key.code == Keyboard::W && event.key.control)
+        return onClick(event);
+        
     return Widget::HandlerResponce::Failure;
 }
 
@@ -176,9 +179,7 @@ Widget::HandlerResponce Panel::onMouseButtonPressed(Event event)
     return HandlerResponce::Success;
 }
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
-Widget::HandlerResponce Panel::PanelBar::PanelCloseButton::onClick(Event event)
+Widget::HandlerResponce Panel::PanelBar::PanelCloseButton::onClick(Event)
 {
     panel->closePanel();
     return Widget::HandlerResponce::Success;

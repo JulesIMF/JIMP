@@ -30,6 +30,7 @@ Revision History:
 #include <file/formats.h>
 #include <editor/Layer.h>
 #include "UI/UI.h"
+#include <plugins/sdk.h>
 
 
 //
@@ -47,42 +48,26 @@ void displayInfo(void)
            "\t*To switch tool, use PgUp and PgDown.\n\n", TerminalColor::BlueB, TerminalColor::Default);
 }
 
+void testPlugins()
+{
+    JIMP::Plugins::Plugin plugin;
+    plugin.loadPlugin("soplugins/kctf_rainbow_stamp.so", nullptr);
+    plugin.closePlugin();
+}
+
 int main(int argc, char const** argv)
 {
-    displayInfo();
     setDebug(true);
+    // testPlugins();
+    displayInfo();
 
     if (argc == 1)
-    {
         warningMessage("No file specified!");
-    }
 
     else
-    {
         JIMP::UI::filename = argv[1];
-    }
 
     JIMP::UI::MainWindow window(JIMP::UI::windowWidth, JIMP::UI::windowHeight);
-
-    // else
-    // {
-    //     FILE* file = fopen(argv[1], "r");
-    //     JIMP::BMP bmp = JIMP::loadImage(file);
-    //     fclose(file);
-
-    //     if (bmp.bitCount / 8 != 4)
-    //     {
-    //         errorMessage("Wrong format");
-    //     }
-
-    //     else
-    //     {
-    //         auto image = JIMP::imageToColorBuffer(bmp);
-
-    //         auto bmpLayer = JIMP::UI::mainEditorCanvasPanel->editorCanvas->layerSwitcher->addLayer(bmp.xSize, bmp.ySize);
-    //         JIMP::transferColorBuffer(JIMP::UI::mainEditorCanvasPanel->editorCanvas->layerSwitcher->getLayer(bmpLayer)->image, image, bmp.xSize, bmp.ySize);
-    //     }
-    // }
     
     window.sendEvent(JG::Event::PaintEvent());
 

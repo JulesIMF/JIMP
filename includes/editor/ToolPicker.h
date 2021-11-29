@@ -40,6 +40,8 @@ namespace JIMP
     {
         void setColor(JG::Color color);
         void setThickness(int thickness);
+        JG::Color getColor() const;
+        int getThickness() const;
         void nextTool();
         void prevTool();
         Tool* getTool();
@@ -49,6 +51,8 @@ namespace JIMP
 
     protected:
         int index = 0;
+        int thickness = 10;
+        JG::Color color = JG::Color::White;
         std::vector<Tool*> tools;
     };
 };

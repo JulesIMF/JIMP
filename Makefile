@@ -406,32 +406,32 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-plugins/api.o: plugins/api.cpp.o
+plugins/Plugin.o: plugins/Plugin.cpp.o
 
-.PHONY : plugins/api.o
+.PHONY : plugins/Plugin.o
 
 # target to build an object file
-plugins/api.cpp.o:
-	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/api.cpp.o
-.PHONY : plugins/api.cpp.o
+plugins/Plugin.cpp.o:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Plugin.cpp.o
+.PHONY : plugins/Plugin.cpp.o
 
-plugins/api.i: plugins/api.cpp.i
+plugins/Plugin.i: plugins/Plugin.cpp.i
 
-.PHONY : plugins/api.i
+.PHONY : plugins/Plugin.i
 
 # target to preprocess a source file
-plugins/api.cpp.i:
-	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/api.cpp.i
-.PHONY : plugins/api.cpp.i
+plugins/Plugin.cpp.i:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Plugin.cpp.i
+.PHONY : plugins/Plugin.cpp.i
 
-plugins/api.s: plugins/api.cpp.s
+plugins/Plugin.s: plugins/Plugin.cpp.s
 
-.PHONY : plugins/api.s
+.PHONY : plugins/Plugin.s
 
 # target to generate assembly for a file
-plugins/api.cpp.s:
-	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/api.cpp.s
-.PHONY : plugins/api.cpp.s
+plugins/Plugin.cpp.s:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Plugin.cpp.s
+.PHONY : plugins/Plugin.cpp.s
 
 # Help Target
 help:
@@ -473,9 +473,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... plugins/api.o"
-	@echo "... plugins/api.i"
-	@echo "... plugins/api.s"
+	@echo "... plugins/Plugin.o"
+	@echo "... plugins/Plugin.i"
+	@echo "... plugins/Plugin.s"
 .PHONY : help
 
 

@@ -36,6 +36,7 @@ using namespace JIMP;
 
 void ToolPicker::setColor(JG::Color color)
 {
+    this->color = color;
     // debugMessage("Set new color: (%d, %d, %d)", color.r, color.g, color.b);
     for (auto tool : tools)
         tool->color = color;
@@ -43,9 +44,20 @@ void ToolPicker::setColor(JG::Color color)
 
 void ToolPicker::setThickness(int thickness)
 {
+    this->thickness = thickness;
     // debugMessage("Set new color: (%d, %d, %d)", color.r, color.g, color.b);
     for (auto tool : tools)
         tool->thickness = thickness;
+}
+
+JG::Color ToolPicker::getColor() const
+{
+    return color;
+}
+
+int ToolPicker::getThickness() const
+{
+    return thickness;
 }
 
 Tool* ToolPicker::getTool()

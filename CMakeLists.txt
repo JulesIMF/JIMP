@@ -64,7 +64,7 @@ add_executable(jimp
 		editor/LayerSwitcher.cpp
 		editor/Layer.cpp
 		file/BMP.cpp
-		plugins/api.cpp
+		plugins/Plugin.cpp
 ) 
 
 find_library(JG libJG.a JG)
