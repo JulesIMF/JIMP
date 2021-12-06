@@ -406,6 +406,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+plugins/Effect.o: plugins/Effect.cpp.o
+
+.PHONY : plugins/Effect.o
+
+# target to build an object file
+plugins/Effect.cpp.o:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Effect.cpp.o
+.PHONY : plugins/Effect.cpp.o
+
+plugins/Effect.i: plugins/Effect.cpp.i
+
+.PHONY : plugins/Effect.i
+
+# target to preprocess a source file
+plugins/Effect.cpp.i:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Effect.cpp.i
+.PHONY : plugins/Effect.cpp.i
+
+plugins/Effect.s: plugins/Effect.cpp.s
+
+.PHONY : plugins/Effect.s
+
+# target to generate assembly for a file
+plugins/Effect.cpp.s:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Effect.cpp.s
+.PHONY : plugins/Effect.cpp.s
+
 plugins/Plugin.o: plugins/Plugin.cpp.o
 
 .PHONY : plugins/Plugin.o
@@ -432,6 +459,60 @@ plugins/Plugin.s: plugins/Plugin.cpp.s
 plugins/Plugin.cpp.s:
 	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Plugin.cpp.s
 .PHONY : plugins/Plugin.cpp.s
+
+plugins/Tool.o: plugins/Tool.cpp.o
+
+.PHONY : plugins/Tool.o
+
+# target to build an object file
+plugins/Tool.cpp.o:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Tool.cpp.o
+.PHONY : plugins/Tool.cpp.o
+
+plugins/Tool.i: plugins/Tool.cpp.i
+
+.PHONY : plugins/Tool.i
+
+# target to preprocess a source file
+plugins/Tool.cpp.i:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Tool.cpp.i
+.PHONY : plugins/Tool.cpp.i
+
+plugins/Tool.s: plugins/Tool.cpp.s
+
+.PHONY : plugins/Tool.s
+
+# target to generate assembly for a file
+plugins/Tool.cpp.s:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/Tool.cpp.s
+.PHONY : plugins/Tool.cpp.s
+
+plugins/appinterface.o: plugins/appinterface.cpp.o
+
+.PHONY : plugins/appinterface.o
+
+# target to build an object file
+plugins/appinterface.cpp.o:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/appinterface.cpp.o
+.PHONY : plugins/appinterface.cpp.o
+
+plugins/appinterface.i: plugins/appinterface.cpp.i
+
+.PHONY : plugins/appinterface.i
+
+# target to preprocess a source file
+plugins/appinterface.cpp.i:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/appinterface.cpp.i
+.PHONY : plugins/appinterface.cpp.i
+
+plugins/appinterface.s: plugins/appinterface.cpp.s
+
+.PHONY : plugins/appinterface.s
+
+# target to generate assembly for a file
+plugins/appinterface.cpp.s:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/plugins/appinterface.cpp.s
+.PHONY : plugins/appinterface.cpp.s
 
 # Help Target
 help:
@@ -473,9 +554,18 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... plugins/Effect.o"
+	@echo "... plugins/Effect.i"
+	@echo "... plugins/Effect.s"
 	@echo "... plugins/Plugin.o"
 	@echo "... plugins/Plugin.i"
 	@echo "... plugins/Plugin.s"
+	@echo "... plugins/Tool.o"
+	@echo "... plugins/Tool.i"
+	@echo "... plugins/Tool.s"
+	@echo "... plugins/appinterface.o"
+	@echo "... plugins/appinterface.i"
+	@echo "... plugins/appinterface.s"
 .PHONY : help
 
 

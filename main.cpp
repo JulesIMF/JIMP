@@ -51,14 +51,13 @@ void displayInfo(void)
 void testPlugins()
 {
     JIMP::Plugins::Plugin plugin;
-    plugin.loadPlugin("soplugins/kctf_rainbow_stamp.so", nullptr);
+    plugin.loadPlugin("soplugins/kctf_shdr.so");
     plugin.closePlugin();
 }
 
 int main(int argc, char const** argv)
 {
     setDebug(true);
-    // testPlugins();
     displayInfo();
 
     if (argc == 1)

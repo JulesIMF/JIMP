@@ -34,7 +34,7 @@ using namespace JIMP::Plugins;
 // Defines
 //
 
-bool Plugin::loadPlugin(char const* filename, const PAppInterface* appInterface)
+bool Plugin::loadPlugin(char const* filename)
 {
     // ******************************************
     // * Collecting main info
@@ -54,7 +54,7 @@ bool Plugin::loadPlugin(char const* filename, const PAppInterface* appInterface)
     get_plugin_interface = (decltype(get_plugin_interface))dlsym(libHandle, PGET_INTERFACE_FUNC);
     if (get_plugin_interface == nullptr)
     {
-        errorMessage("failed to get plugin \"%s\" interface", filename);
+        errorMessage("failed to get plugin \"%s\" interface; probably it was not a plugin, but ", filename);
         closePlugin();
         return false;
     }
@@ -149,7 +149,7 @@ bool Plugin::loadPlugin(char const* filename, const PAppInterface* appInterface)
     // * Reverse handshaking
     // ******************************************
 
-    auto handshakingStatus = interface->general.init(appInterface);
+    auto handshakingStatus = interface->general.init(getPAppInterface());
     
     switch (handshakingStatus)
     {

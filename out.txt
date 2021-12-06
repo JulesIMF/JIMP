@@ -1,0 +1,1 @@
+jimp: / home / julesimf / source / Ded 3 / JIMP / plugins / Tool.cpp : 37 : virtual void JIMP::Plugins::PluginTool::applyOnPress(JIMP::Layer&) : Assertion `getAppToPI()->setLayer(&layer)' failed.

@@ -11,7 +11,7 @@
 #		My default CMake. Allows to compile the project
 #		changing only FILES (and other flags if needed).
 #		
-#		Build this project with "make" or "make mol".#		
+#		Build this project with "make" or "make jimp".#		
 #
 #---
 
@@ -65,6 +65,9 @@ add_executable(jimp
 		editor/Layer.cpp
 		file/BMP.cpp
 		plugins/Plugin.cpp
+		plugins/appinterface.cpp
+		plugins/Tool.cpp
+		plugins/Effect.cpp
 ) 
 
 find_library(JG libJG.a JG)

@@ -115,7 +115,14 @@ namespace JIMP
         }
     };
 
-    JG::Color mixColors(JG::Color back, JG::Color layer);
+    enum class MixMode
+    {
+        Alpha,
+        PseudoAlpha,
+        Replace
+    };
+
+    JG::Color mixColors(JG::Color back, JG::Color layer, MixMode mode = MixMode::PseudoAlpha);
     void transferColorBuffer(JG::Color** to, JG::Color const* const* from, 
                              int toWidth,   int toHeight,
                              int fromWidth, int fromHeight);

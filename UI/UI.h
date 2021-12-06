@@ -23,11 +23,13 @@ Revision History:
 // Includes / usings
 //
 
+#include <dirent.h> 
 #include <JG.h>
 #include <editor/Palette.h>
 #include <editor/Editor.h>
 #include <editor/LayerSwitcher.h>
 #include <editor/Curves.h>
+#include <plugins/sdk.h>
 #include "Vista.h"
 
 
@@ -59,6 +61,10 @@ namespace JIMP
                          switchHeight = switchSpace + 
                                         (switchSpace + switchButtonSize) * switchNY + + VistaSlider::VistaThumb::thumbHeight +
                                         switchSpace;
+
+        char const* const pluginsDirName = "./soplugins";
+
+        std::vector<::JIMP::Plugins::Plugin> loadedPlugins;
 
         class EditorCanvas;
         EditorCanvas* activeCanvas = nullptr;
@@ -555,6 +561,70 @@ namespace JIMP
             JIMP::Curves curves;
         };
 
+        class EffectPanel : public VistaPanel
+        {
+        public:
+            struct ApplyButton : public VistaButton
+            {
+                ApplyButton(JG::Window* window, int beginX, int beginY, int width, EffectPanel* panel, EditorCanvas* editorCanvas) :
+                    VistaButton(window, beginX, beginY, width),
+                    panel(panel),
+                    editorCanvas(editorCanvas)
+                {
+                    caption = "Apply";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    panel->effect.apply();
+                    editorCanvas->editor->mix(editorCanvas->layerSwitcher->getLayerVector());
+                    panel->applied = true;
+                    panel->closePanel();
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                EffectPanel* panel;
+                EditorCanvas* editorCanvas;
+            };
+
+            EffectPanel(JG::Window* window, Layer* layer, EditorCanvas* editorCanvas, ::JIMP::Plugins::PluginEffect effect, char const* name) :
+                VistaPanel(window, space, space, 2 * space + Spline::fullSize, space + VistaButton::buttonHeight + space),
+                effect(effect),
+                editorCanvas(editorCanvas)
+            {
+                caption = name;
+                addChild(new ApplyButton(window, space, space, width - 2 * space, this, editorCanvas));
+                this->effect.start(*layer);
+            }
+
+            virtual JG::Widget::HandlerResponce onTimer(JG::Event event) override
+            {
+                static int lastUpdate = 0;
+                if ((event.timer.timeMs - lastUpdate) > updateIntervalMs)
+                {
+                    lastUpdate = event.timer.timeMs;
+                    effect.update();
+                    editorCanvas->editor->mix(editorCanvas->layerSwitcher->getLayerVector());
+                }
+
+                return JG::Widget::HandlerResponce::SuccessYield;
+            }
+
+            virtual JG::Widget::HandlerResponce onDelete(JG::Event event) override
+            {
+                if (!applied) effect.reset();
+                editorCanvas->editor->mix(editorCanvas->layerSwitcher->getLayerVector());
+                return JG::Widget::HandlerResponce::Success;
+            }
+
+        protected:
+            ::JIMP::Plugins::PluginEffect effect;
+            EditorCanvas* editorCanvas;
+            bool applied = false;
+            int const updateIntervalMs = 40;
+        };
+
         struct OpenBmpPanel : public VistaPanel
         {
             static int const bmpPanelWidth = 300;
@@ -692,35 +762,164 @@ namespace JIMP
                 }
             };
 
+            struct PluginToolItem : public VistaMenuItem
+            {
+                PluginToolItem(JG::Window* window, std::string const& name) :
+                    VistaMenuItem(window, name.c_str()),
+                    name(name)
+                {
+                    caption = this->name.c_str();
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    toolPicker->selectByName(name.c_str());
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                std::string const name;
+            };
+
+            struct PluginEffectItem : public VistaMenuItem
+            {
+                PluginEffectItem(JG::Window* window, ::JIMP::Plugins::PluginEffect effect, std::string const& name) :
+                    VistaMenuItem(window, name.c_str()),
+                    name(name),
+                    effect(effect)
+                {
+                    caption = this->name.c_str();
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    if (activeCanvas)
+                    {
+                        window->addChild(new EffectPanel(window, activeCanvas->layerSwitcher->getCurrentLayer(),
+                                                         activeCanvas, effect, name.c_str()));
+                    }
+
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                std::string const name;
+                ::JIMP::Plugins::PluginEffect effect;
+            };
 
             MainWindowMenuStrip(JG::Window* window) :
                 VistaMenuStrip(window)
             {
-                VistaMenuButton* file = new VistaMenuButton(window, this, "File");
-                VistaMenuButton* panels = new VistaMenuButton(window, this, "Panels");
-                VistaMenuButton* correction = new VistaMenuButton(window, this, "Correction");
+                file = new VistaMenuButton(window, this, "File");
+                panels = new VistaMenuButton(window, this, "Panels");
+                correction = new VistaMenuButton(window, this, "Correction");
+                pluginTools = new VistaMenuButton(window, this, "Plugin tools");
+                pluginEffects = new VistaMenuButton(window, this, "Plugin effects");
                 addChild(file);
                 addChild(panels);
                 addChild(correction);
+                addChild(pluginTools);
+                addChild(pluginEffects);
 
-                VistaMenu* fileMenu = new VistaMenu(window, file);
+                fileMenu = new VistaMenu(window, file);
                 fileMenu->addChild(new ExitItem(window));
                 fileMenu->addChild(new OpenBmpItem(window));
                 file->setMenu(fileMenu);
 
-                VistaMenu* panelsMenu = new VistaMenu(window, panels);
+                panelsMenu = new VistaMenu(window, panels);
                 panelsMenu->addChild(new PaletteItem(window));
                 panelsMenu->addChild(new SwitcherItem(window));
                 panelsMenu->addChild(new CanvasItem(window));
                 panels->setMenu(panelsMenu);
 
-                VistaMenu* correctionMenu = new VistaMenu(window, correction);
+                correctionMenu = new VistaMenu(window, correction);
                 correctionMenu->addChild(new CurvesItem(window));
                 correction->setMenu(correctionMenu);
+
+                toolsMenu = new VistaMenu(window, pluginTools);
+                pluginTools->setMenu(toolsMenu);
+
+                effectsMenu = new VistaMenu(window, pluginEffects);
+                pluginEffects->setMenu(effectsMenu);
             }
+
+            VistaMenuButton* file;
+            VistaMenuButton* panels;
+            VistaMenuButton* correction;
+            VistaMenuButton* pluginTools;
+            VistaMenuButton* pluginEffects;
+
+            VistaMenu* fileMenu;
+            VistaMenu* panelsMenu;
+            VistaMenu* correctionMenu;
+            VistaMenu* toolsMenu;
+            VistaMenu* effectsMenu;
         };
 
         EditorCanvasPanel* mainEditorCanvasPanel = nullptr;
+
+        bool loadPlugins(JG::Window* window,  MainWindowMenuStrip* strip)
+        {
+            ::JIMP::Plugins::getAppToPI()->picker = toolPicker;
+
+            DIR* pluginsDir = nullptr;
+            struct dirent* ent = nullptr;
+            pluginsDir = opendir(pluginsDirName);
+            if (pluginsDir)
+            {
+                debugMessage("starting loading plugins from \"%s\"", pluginsDirName);
+                while ((ent = readdir(pluginsDir)))
+                {
+                    if (ent->d_type == DT_REG)
+                    {
+                        std::string address = "soplugins/";
+                        address += ent->d_name;
+
+                        ::JIMP::Plugins::Plugin plugin;
+                        if (!plugin.loadPlugin(address.c_str()))
+                            continue;
+                        
+                        if (plugin.type == PPT_TOOL)
+                        {
+                            std::string name = plugin.info->author;
+                            name += " - ";
+                            name += plugin.info->name;
+
+                            toolPicker->insert(new ::JIMP::Plugins::PluginTool(plugin, name));
+                            strip->toolsMenu->addChild(new MainWindowMenuStrip::PluginToolItem(window, name));
+
+                            loadedPlugins.push_back(plugin);
+                            continue;
+                        }
+
+                        if (plugin.type == PPT_EFFECT)
+                        {
+                            std::string name = plugin.info->author;
+                            name += " - ";
+                            name += plugin.info->name;
+
+                            ::JIMP::Plugins::PluginEffect effect(plugin, name);
+
+                            strip->effectsMenu->addChild(new MainWindowMenuStrip::PluginEffectItem(window, effect, name));
+
+                            loadedPlugins.push_back(plugin);
+                            continue;
+                        }
+                    }
+                }
+
+                closedir(pluginsDir);
+
+                debugMessage("plugins loaded");
+                return true;
+            }
+
+            else
+            {
+                warningMessage("failed to open \"%s\" to load plugins", pluginsDirName);
+                return false;
+            }
+        }
 
         class MainWindow : public JG::Window
         {
@@ -745,7 +944,8 @@ namespace JIMP
                 addChild(new ToolPickerPanel(this));
                 addChild(new PalettePanel(this));
 
-                addChild(new MainWindowMenuStrip(this));
+                addChild(strip = new MainWindowMenuStrip(this));
+                loadPlugins(this, strip);
                 timerTickIntervalMs = 50;
             }
 
@@ -755,6 +955,8 @@ namespace JIMP
                 rect.setColor({255, 255, 255});
                 rect.draw(*this);
             }  
+
+            MainWindowMenuStrip* strip = nullptr;
         };
     }
 }

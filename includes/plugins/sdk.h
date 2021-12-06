@@ -28,6 +28,7 @@ Revision History:
 #include <chrono>
 #include "../../plugins/EditorPluginAPI/plugin_std.hpp"
 #include <editor/Layer.h>
+#include <common/messages.h>
 #include <editor/ToolPicker.h>
 
 
@@ -45,7 +46,7 @@ namespace JIMP
             PPluginInfo const* info = nullptr;
             PPreviewLayerPolicy flushPolicy;
 
-            bool loadPlugin(char const* filename, const PAppInterface* appInterface);
+            bool loadPlugin(char const* filename);
             void closePlugin();
             bool isLoaded() const;
             double timeFromStart() const;
@@ -65,13 +66,89 @@ namespace JIMP
             ToolPicker* picker = nullptr;
             PRGBA* pixels = nullptr;
             JG::Color** stdPreview = nullptr;
+
+            bool isSet()
+            {
+                return currentLayer;
+            }
+
+            bool setLayer(Layer* newLayer)
+            {
+                if (isSet())
+                {
+                    errorMessage("can`t set new layer in AppToPI cause it`s already set");
+                    return false;
+                }
+
+                currentLayer = newLayer;
+                stdPreview = new JG::Color* [currentLayer->width];
+
+                for (int x = 0; x != currentLayer->width; x++)
+                {
+                    stdPreview[x] = new JG::Color[currentLayer->height];
+                    memset(stdPreview[x], 0, sizeof(JG::Color) * currentLayer->height);
+                }
+
+                return true;
+            }
+
+            void releaseLayer()
+            {
+                for (int x = 0; x != currentLayer->width; x++)
+                    delete[] stdPreview[x];
+
+                delete[] stdPreview;
+                currentLayer = nullptr;
+            }
+
+
         };
 
-        #ifndef JIMP_APPINTERFACE
-            extern PAppInterface const* getPAppInterface();
-        #else
-            PAppInterface const* getPAppInterface();
-        #endif
+        struct PluginTool : public JIMP::Tool
+        {
+            PluginTool(Plugin plugin, std::string name) : 
+                plugin(plugin),
+                name(name)
+            {
+
+            }
+
+            virtual void applyOnPress(JIMP::Layer& layer) override;
+            virtual void applyOnMove(JIMP::Layer& layer) override;
+            virtual void applyOnRelease(JIMP::Layer& layer) override;
+            virtual void applyOnTimer(JIMP::Layer& layer, int passedMs) override;
+            virtual char const* getName() override;
+            virtual void drawCursor(JG::Window* window, int x, int y, int canvasWidth, int canvasHeight, int shiftX, int shiftY) override;
+
+        protected:
+            Plugin plugin;
+            std::string name;
+        };
+
+        struct PluginEffect
+        {
+            PluginEffect(Plugin plugin, std::string name) :
+                plugin(plugin),
+                name(name)
+            {
+
+            }
+
+            void start(JIMP::Layer& layer);
+            void apply();
+            void update(...);
+            void reset();
+
+        protected:
+            Plugin plugin;
+            std::string name;
+            void end();
+
+        };
+
+        PAppInterface const* getPAppInterface();
+        AppToPI* getAppToPI();
+        void flush();
     }
 }
 

@@ -25,6 +25,7 @@ Revision History:
 // Includes / usings
 //
 
+#include <cassert>
 #include <editor/Layer.h>
 using namespace JIMP;
 
@@ -32,21 +33,33 @@ using namespace JIMP;
 // Defines
 //
 
-JG::Color JIMP::mixColors(JG::Color back, JG::Color layer)
+JG::Color JIMP::mixColors(JG::Color back, JG::Color layer, JIMP::MixMode mode)
 {
-    if (layer.a)
-        return layer;
+    switch (mode)
+    {
+    case JIMP::MixMode::Alpha:
+        return
+        {
+            (back.r * (255 - layer.a) + layer.r * layer.a) >> 8,
+            (back.g * (255 - layer.a) + layer.g * layer.a) >> 8,
+            (back.b * (255 - layer.a) + layer.b * layer.a) >> 8,
+            std::max(back.a, layer.a)
+        };
     
-    else
-        return back;
+    case JIMP::MixMode::PseudoAlpha:
+        if (layer.a)
+            return layer;
+        
+        else
+            return back;
 
-    // return
-    // {
-    //     (back.r * (255 - layer.a) + layer.r * layer.a) >> 8,
-    //     (back.g * (255 - layer.a) + layer.g * layer.a) >> 8,
-    //     (back.b * (255 - layer.a) + layer.b * layer.a) >> 8,
-    //     255
-    // };
+    case JIMP::MixMode::Replace:
+        return layer;
+
+    default:
+        assert(!"Unknown mode");
+        return {};
+    }
 }
 
 void JIMP::transferColorBuffer(JG::Color** to, JG::Color const* const* from,
