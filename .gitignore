@@ -40,6 +40,7 @@ jimp
 
 # Profiles
 callgrind.out.*
+out.txt
 
 # Folders
 build
