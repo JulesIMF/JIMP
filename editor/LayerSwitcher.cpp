@@ -82,9 +82,15 @@ void LayerSwitcher::prevLayer()
 
 int LayerSwitcher::addLayer(int layerWidth, int layerHeight)
 {
-    layers.push_back(new Layer{ 0, 0, layerWidth, layerHeight });
+    layers.push_back(new Layer{ false, 0, 0, layerWidth, layerHeight });
     layers.back()->init();
     return nLayers() - 1;
+}
+
+int LayerSwitcher::addLayer(Layer* layer)
+{
+    layers.push_back(layer);
+    return currentLayer = nLayers() - 1;
 }
 
 void LayerSwitcher::removeLayer(int index)
@@ -99,10 +105,52 @@ void LayerSwitcher::removeLayer(int index)
     currentLayer = std::min(nLayers() - 1, currentLayer);
 }
 
+void LayerSwitcher::forward()
+{
+    if (currentLayer + 1 == nLayers())
+        return;
+    
+    std::swap(layers[currentLayer], layers[currentLayer + 1]);
+    currentLayer++;
+}
+
+void LayerSwitcher::backward()
+{
+    if (!currentLayer)
+        return;
+
+    std::swap(layers[currentLayer], layers[currentLayer - 1]);
+    currentLayer--;
+}
+
+void LayerSwitcher::copy()
+{
+    auto layer = layers[currentLayer];
+    auto newLayer = new Layer;
+    newLayer->width = layer->width;
+    newLayer->height = layer->height;
+    newLayer->init();
+    newLayer->beginX = layer->beginX;
+    newLayer->beginY = layer->beginY;
+    for (int x = 0; x != layer->width; x++)
+        for (int y = 0; y != layer->height; y++)
+            newLayer->image[x][y] = layer->image[x][y];
+    layers.insert(layers.begin() + currentLayer + 1, newLayer);
+    currentLayer++;
+}
+
+void LayerSwitcher::mute()
+{
+    auto layer = layers[currentLayer];
+    layer->muted = !layer->muted;
+}
+
 Layer* LayerSwitcher::getLayer(int index)
 {
     return layers[index];
 }
+
+
 
 int LayerSwitcher::nLayers()
 {

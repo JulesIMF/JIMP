@@ -43,7 +43,7 @@ namespace JIMP
         Editor(int sizeX, int sizeY);
         ~Editor();
 
-        void mix(std::vector<Layer*> &layers);
+        void mix(std::vector<Layer*>& layers, bool preview = true);
         JG::Color** getImage();
 
         int width, height;

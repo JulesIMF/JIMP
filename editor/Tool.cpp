@@ -233,6 +233,8 @@ void Fill::applyOnPress(Layer& layer)
         return;
 
     int canvasWidth = layer.width, canvasHeight = layer.height;
+    if (!(0 <= x && x < canvasWidth && 0 <= y && y < canvasHeight))
+        return;
 
     std::queue<JG::Vector2i> pointsQueue;
     auto oldColor = layer[x][y];

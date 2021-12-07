@@ -32,7 +32,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 # add_definitions(NDEBUG)
 
-set(OPT "-O2")
+set(OPT "-O0")
 set(SANITIZE 0)
 
 if(SANITIZE)
@@ -65,6 +65,7 @@ add_executable(jimp
 		editor/LayerSwitcher.cpp
 		editor/Layer.cpp
 		file/BMP.cpp
+		file/sfimg.cpp
 		plugins/Plugin.cpp
 		plugins/appinterface.cpp
 		plugins/Tool.cpp

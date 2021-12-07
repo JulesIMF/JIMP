@@ -38,8 +38,9 @@ namespace JIMP
 {
     struct Layer
     {
-        int beginX, beginY;
-        int width, height;
+        bool muted = false;
+        int beginX = 0, beginY = 0;
+        int width = -1, height = -1;
 
         JG::Color** image;
         JG::Color** preview;

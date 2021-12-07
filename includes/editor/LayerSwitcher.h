@@ -49,6 +49,11 @@ namespace JIMP
 
 
         int addLayer(int layerWidth, int layerHeight);
+        int addLayer(Layer* layer);
+        void forward();
+        void backward();
+        void copy();
+        void mute();
         Layer* getLayer(int index);
         int nLayers();
         void removeLayer(int index);

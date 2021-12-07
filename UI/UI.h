@@ -29,6 +29,7 @@ Revision History:
 #include <editor/Editor.h>
 #include <editor/LayerSwitcher.h>
 #include <editor/Curves.h>
+#include <file/sfimg.h>
 #include <plugins/sdk.h>
 #include "Vista.h"
 
@@ -62,8 +63,8 @@ namespace JIMP
                                         (switchSpace + switchButtonSize) * switchNY + + VistaSlider::VistaThumb::thumbHeight +
                                         switchSpace;
 
-        static int const layerPreviewWidth = 200, layerPreviewHeight = 175,
-                         layerButtonSize = 50;
+        static int const layerPreviewWidth = 400, layerPreviewHeight = 300,
+                         layerButtonSize = 80;
 
         char const* const pluginsDirName = "./soplugins";
 
@@ -111,6 +112,11 @@ namespace JIMP
                                                       shiftX, 
                                                       shiftY + VistaPanel::VistaPanelBar::vistaBarHeight);
                 }
+            }
+
+            void mix(bool preview = true)
+            {
+                editor->mix(layerSwitcher->getLayerVector(), preview);
             }
 
             void moveTool(int x, int y, int dx, int dy)
@@ -317,21 +323,15 @@ namespace JIMP
 
                     else
                     {
-                        JIMP::BMP bmp = JIMP::loadImage(file);
-                        fclose(file);
-
-                        if (bmp.bitCount / 8 != 4)
+                        auto layer = openImage(fileName);
+                        if (layer)
                         {
-                            errorMessage("Wrong format");
+                            openedFile = true;
+                            editorCanvas->layerSwitcher->addLayer(layer);
                         }
-
                         else
                         {
-                            auto image = JIMP::imageToColorBuffer(bmp);
-                            auto bmpLayer = editorCanvas->layerSwitcher->addLayer(bmp.xSize, bmp.ySize);
-                            JIMP::transferColorBuffer(editorCanvas->layerSwitcher->getLayer(bmpLayer)->image, image, bmp.xSize, bmp.ySize);
-                            JIMP::deleteColorBuffer(image, bmp.xSize, bmp.ySize);
-                            openedFile = true;
+                            errorMessage("Wrong format");
                         }
                     }
                 }
@@ -362,6 +362,8 @@ namespace JIMP
             {
                 if (activeCanvas == editorCanvas)
                     activeCanvas = nullptr;
+
+                nAdded--;
 
                 return JG::Widget::HandlerResponce::Success;
             }
@@ -511,7 +513,9 @@ namespace JIMP
                         activeCanvas->layerSwitcher->nextLayer();
                     
                     else
-                        activeCanvas->layerSwitcher->prevLayer();                        
+                        activeCanvas->layerSwitcher->prevLayer();  
+
+                    activeCanvas->mix();
 
                     return JG::Widget::HandlerResponce::Success;
                 }
@@ -537,7 +541,7 @@ namespace JIMP
 
                     if (create)
                     {
-                        auto newLayer = activeCanvas->layerSwitcher->addLayer(editorHeight, editorWidth);
+                        auto newLayer = activeCanvas->layerSwitcher->addLayer(editorWidth, editorHeight);
                         activeCanvas->layerSwitcher->setLayer(newLayer);
                     }
 
@@ -546,11 +550,108 @@ namespace JIMP
                         activeCanvas->layerSwitcher->removeLayer(activeCanvas->layerSwitcher->getCurrentLayerIndex());
                     }
 
+                    activeCanvas->mix();
+
                     return JG::Widget::HandlerResponce::Success;
                 }
 
             protected:
                 bool create;
+            };
+
+            class LayerForward : public VistaButton
+            {
+            public:
+                LayerForward(JG::Window* window, int beginX, int beginY, bool forward) :
+                    VistaButton(window, beginX, beginY, layerButtonSize),
+                    forward(forward)
+                {
+                    caption = forward ? "Forward" : "Backward";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event) override
+                {
+                    if (!activeCanvas)
+                        return JG::Widget::HandlerResponce::Success;
+
+                    if (forward)
+                    {
+                        activeCanvas->layerSwitcher->forward();
+                    }
+
+                    else
+                    {
+                        activeCanvas->layerSwitcher->backward();
+                    }
+
+                    activeCanvas->mix();
+
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                bool forward;
+            };
+
+            class LayerCopy : public VistaButton
+            {
+            public:
+                LayerCopy(JG::Window* window, int beginX, int beginY) :
+                    VistaButton(window, beginX, beginY, layerButtonSize)
+                {
+                    caption = "Copy";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event) override
+                {
+                    if (!activeCanvas)
+                        return JG::Widget::HandlerResponce::Success;
+
+                    activeCanvas->layerSwitcher->copy();
+                    activeCanvas->mix();
+
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+            };
+
+            class LayerMute : public VistaButton
+            {
+            public:
+                LayerMute(JG::Window* window, int beginX, int beginY) :
+                    VistaButton(window, beginX, beginY, layerButtonSize)
+                {
+                    caption = "Mute";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event) override
+                {
+                    if (!activeCanvas)
+                        return JG::Widget::HandlerResponce::Success;
+
+                    activeCanvas->layerSwitcher->mute();
+                    activeCanvas->mix();
+
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+                virtual void renderMyself(int shiftX, int shiftY) override
+                {
+                    setCaption();
+                    VistaButton::renderMyself(shiftX, shiftY);
+                }
+
+                void setCaption()
+                {
+                    if (activeCanvas && activeCanvas->layerSwitcher->getCurrentLayer()->muted)
+                        caption = "Unmute";
+                    
+                    else
+                        caption = "Mute";
+                }
+
+            protected:
             };
 
             LayerSwitcherPanel(JG::Window* window) : 
@@ -564,10 +665,16 @@ namespace JIMP
                                    switchSpace * 2 + layerPreviewHeight)
             {
                 addChild(previewCanvas = new JG::Canvas(window, switchSpace, switchSpace, layerPreviewWidth, layerPreviewHeight));
-                addChild(new LayerSwitch(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 0, true));
-                addChild(new LayerSwitch(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 1, false));
-                addChild(new LayerCreate(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 2, true));
-                addChild(new LayerCreate(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 3, false));
+
+                int added = 0;
+                addChild(new LayerMute(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++)));
+                addChild(new LayerSwitch(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++), true));
+                addChild(new LayerSwitch(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++), false));
+                addChild(new LayerCopy(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++)));
+                addChild(new LayerCreate(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++), true));
+                addChild(new LayerCreate(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++), false));
+                addChild(new LayerForward(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++), true));
+                addChild(new LayerForward(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * (added++), false));
             }
 
             virtual void renderMyself(int shiftX, int shiftY) override
@@ -575,11 +682,10 @@ namespace JIMP
                 if (activeCanvas)
                 {
                     auto layer = activeCanvas->layerSwitcher->getCurrentLayer();
-                    double scaleX = double(layer->width) / double(layerPreviewWidth);
-                    double scaleY = double(layer->height) / double(layerPreviewHeight);
+                    double scaleX = double(activeCanvas->editor->width) / double(layerPreviewWidth);
+                    double scaleY = double(activeCanvas->editor->height) / double(layerPreviewHeight);
 
-                    auto beginX = layer->beginX,
-                         beginY = layer->beginY;
+                    auto beginX = layer->beginX, beginY = layer->beginY;
 
                     auto width  = layer->width,
                          height = layer->height;
@@ -785,41 +891,123 @@ namespace JIMP
             int const updateIntervalMs = 40;
         };
 
-        struct OpenBmpPanel : public VistaPanel
+        struct OpenPanel : public VistaPanel
         {
             static int const bmpPanelWidth = 300;
 
             struct OpenButton : public VistaButton
             {
-                OpenButton(JG::Window* window, int beginX, int beginY, int width, OpenBmpPanel* panel) :
+                OpenButton(JG::Window* window, int beginX, int beginY, int width, OpenPanel* panel) :
                     VistaButton(window, beginX, beginY, width),
                     panel(panel)
                 {
-                    caption = "Open by name";
+                    caption = "Open";
                 }
 
                 virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
                 {
-                    window->addChild(new EditorCanvasPanel(window, panel->textBox->getText()));
+                    if (activeCanvas)
+                    {
+                        auto fileName = panel->textBox->getText();
+
+                        FILE* file = fopen(fileName, "r");
+                        if (!file)
+                        {
+                            errorMessage("Wrong file \"%s\"", fileName);
+                        }
+
+                        else
+                        {
+                            auto layer = openImage(fileName);
+                            if (layer)
+                            {
+                                activeCanvas->layerSwitcher->addLayer(layer);
+                                activeCanvas->mix();
+                            }
+                            else
+                            {
+                                errorMessage("Wrong format");
+                            }
+                        }
+                    }
+                    else
+                        errorMessage("No active canvas, image can`t be added");
+
                     panel->closePanel();
                     return JG::Widget::HandlerResponce::Success;
                 }
 
             protected:
-                OpenBmpPanel* panel;
+                OpenPanel* panel;
             };
 
-            OpenBmpPanel(JG::Window* window, int width = bmpPanelWidth + 2 * space, int height = space * 3 + OpenButton::buttonHeight + VistaTextBox::tbHeight) :
+            OpenPanel(JG::Window* window, int width = bmpPanelWidth + 2 * space, int height = space * 3 + OpenButton::buttonHeight + VistaTextBox::tbHeight) :
                 VistaPanel(window,
                            (windowWidth - width) / 2, 
                            (windowHeight - height) / 2,
                            width,
                            height)
                 {
-                    caption = "Open BMP file";
+                    caption = "Open image";
                     addChild(textBox = new VistaTextBox(window, space, space, width - 2 * space));
                     addChild(button = new OpenButton(window, space, space * 2 + VistaTextBox::tbHeight, width - 2 * space, this));
                 }
+
+            OpenButton* button;
+            VistaTextBox* textBox;
+        };
+
+        struct SavePanel : public VistaPanel
+        {
+            static int const bmpPanelWidth = 300;
+
+            struct OpenButton : public VistaButton
+            {
+                OpenButton(JG::Window* window, int beginX, int beginY, int width, SavePanel* panel) :
+                    VistaButton(window, beginX, beginY, width),
+                    panel(panel)
+                {
+                    caption = "Save";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    if (activeCanvas != nullptr)
+                    {
+                        activeCanvas->mix(false);
+                        auto result = saveImage(activeCanvas->editor->getImage(), 
+                                                activeCanvas->editor->width,
+                                                activeCanvas->editor->height,
+                                                panel->textBox->getText());
+                        activeCanvas->mix(true);
+                        
+                        if (!result)
+                            errorMessage("couldnt save file \"%s\"", panel->textBox->getText());
+                    }
+                    else
+                    {
+                        errorMessage("nothing to save as there is no active canvas!");
+                    }
+                    
+                    panel->closePanel();
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                SavePanel* panel;
+            };
+
+            SavePanel(JG::Window* window, int width = bmpPanelWidth + 2 * space, int height = space * 3 + OpenButton::buttonHeight + VistaTextBox::tbHeight) :
+                VistaPanel(window,
+                    (windowWidth - width) / 2,
+                    (windowHeight - height) / 2,
+                    width,
+                    height)
+            {
+                caption = "Save as...";
+                addChild(textBox = new VistaTextBox(window, space, space, width - 2 * space));
+                addChild(button = new OpenButton(window, space, space * 2 + VistaTextBox::tbHeight, width - 2 * space, this));
+            }
 
             OpenButton* button;
             VistaTextBox* textBox;
@@ -843,17 +1031,32 @@ namespace JIMP
                 }
             };
 
-            struct OpenBmpItem : public VistaMenuItem
+            struct OpenItem : public VistaMenuItem
             {
-                OpenBmpItem(JG::Window* window) :
-                    VistaMenuItem(window, "Open BMP file")
+                OpenItem(JG::Window* window) :
+                    VistaMenuItem(window, "Open image")
                 {
 
                 }
 
                 virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
                 {
-                    window->addChild(new OpenBmpPanel(window));
+                    window->addChild(new OpenPanel(window));
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+            struct SaveItem : public VistaMenuItem
+            {
+                SaveItem(JG::Window* window) :
+                    VistaMenuItem(window, "Save image")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new SavePanel(window));
                     return JG::Widget::HandlerResponce::Success;
                 }
             };
@@ -998,8 +1201,9 @@ namespace JIMP
                 addChild(pluginEffects);
 
                 fileMenu = new VistaMenu(window, file);
+                fileMenu->addChild(new OpenItem(window));
+                fileMenu->addChild(new SaveItem(window));
                 fileMenu->addChild(new ExitItem(window));
-                fileMenu->addChild(new OpenBmpItem(window));
                 file->setMenu(fileMenu);
 
                 panelsMenu = new VistaMenu(window, panels);

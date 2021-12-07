@@ -379,6 +379,33 @@ file/BMP.cpp.s:
 	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/file/BMP.cpp.s
 .PHONY : file/BMP.cpp.s
 
+file/sfimg.o: file/sfimg.cpp.o
+
+.PHONY : file/sfimg.o
+
+# target to build an object file
+file/sfimg.cpp.o:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/file/sfimg.cpp.o
+.PHONY : file/sfimg.cpp.o
+
+file/sfimg.i: file/sfimg.cpp.i
+
+.PHONY : file/sfimg.i
+
+# target to preprocess a source file
+file/sfimg.cpp.i:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/file/sfimg.cpp.i
+.PHONY : file/sfimg.cpp.i
+
+file/sfimg.s: file/sfimg.cpp.s
+
+.PHONY : file/sfimg.s
+
+# target to generate assembly for a file
+file/sfimg.cpp.s:
+	$(MAKE) -f CMakeFiles/jimp.dir/build.make CMakeFiles/jimp.dir/file/sfimg.cpp.s
+.PHONY : file/sfimg.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -551,6 +578,9 @@ help:
 	@echo "... file/BMP.o"
 	@echo "... file/BMP.i"
 	@echo "... file/BMP.s"
+	@echo "... file/sfimg.o"
+	@echo "... file/sfimg.i"
+	@echo "... file/sfimg.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

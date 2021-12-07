@@ -55,16 +55,24 @@ JG::Color** Editor::getImage()
     return image;
 }
 
-void Editor::mix(std::vector<Layer*>& layers)
+void Editor::mix(std::vector<Layer*>& layers, bool preview)
 {
-    for (int x = 0; x < width; x++)
-        for (int y = 0; y < height; y++)
-            image[x][y] = ( (((x - shiftX) >> 4) + ((y - shiftY) >> 4)) & 1 ) ?
-            JG::Color{255, 255, 255, 255} : // white
-            JG::Color{ 128, 128, 128, 255 }; // gray
+    if (preview)
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                image[x][y] = ( (((x - shiftX) >> 4) + ((y - shiftY) >> 4)) & 1 ) ?
+                JG::Color{255, 255, 255, 255} : // white
+                JG::Color{ 128, 128, 128, 255 }; // gray
+    
+    else
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                image[x][y] = JG::Color::Transparent;
 
     for (auto layer : layers)
     {
+        if (layer->muted) continue;
+        
         int beginShiftX = layer->beginX + shiftX;
         int beginShiftY = layer->beginY + shiftY;
         int endX = std::min(width,  layer->width  + beginShiftX);
