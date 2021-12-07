@@ -5,7 +5,7 @@
             "includePath": [
                 "${default}",
                 // "/home/julesimf/source/Ded 3/JG/includes",
-                "/home/julesimf/source/Ded 3/JIMP/includes",
+                "/home/julesimf/source/Ded3/JIMP/includes",
                 "${workspaceFolder}/JG/includes"
             ],
             "compilerPath": "/usr/bin/clang",

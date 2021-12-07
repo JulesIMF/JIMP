@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/julesimf/source/Ded 3/JIMP"
+CMAKE_SOURCE_DIR = /home/julesimf/source/Ded3/JIMP
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/julesimf/source/Ded 3/JIMP"
+CMAKE_BINARY_DIR = /home/julesimf/source/Ded3/JIMP
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(CMAKE_COMMAND) -E cmake_progress_start "/home/julesimf/source/Ded 3/JIMP/CMakeFiles" "/home/julesimf/source/Ded 3/JIMP/JG/CMakeFiles/progress.marks"
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f CMakeFiles/Makefile2 JG/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/julesimf/source/Ded 3/JIMP/CMakeFiles" 0
+	cd /home/julesimf/source/Ded3/JIMP && $(CMAKE_COMMAND) -E cmake_progress_start /home/julesimf/source/Ded3/JIMP/CMakeFiles /home/julesimf/source/Ded3/JIMP/JG/CMakeFiles/progress.marks
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f CMakeFiles/Makefile2 JG/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/julesimf/source/Ded3/JIMP/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f CMakeFiles/Makefile2 JG/clean
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f CMakeFiles/Makefile2 JG/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,22 +97,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f CMakeFiles/Makefile2 JG/preinstall
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f CMakeFiles/Makefile2 JG/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f CMakeFiles/Makefile2 JG/preinstall
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f CMakeFiles/Makefile2 JG/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/julesimf/source/Ded3/JIMP && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 JG/CMakeFiles/JG.dir/rule:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f CMakeFiles/Makefile2 JG/CMakeFiles/JG.dir/rule
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f CMakeFiles/Makefile2 JG/CMakeFiles/JG.dir/rule
 .PHONY : JG/CMakeFiles/JG.dir/rule
 
 # Convenience name for target.
@@ -122,7 +122,7 @@ JG: JG/CMakeFiles/JG.dir/rule
 
 # fast build rule for target.
 JG/fast:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/build
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/build
 .PHONY : JG/fast
 
 Button.o: Button.cpp.o
@@ -131,7 +131,7 @@ Button.o: Button.cpp.o
 
 # target to build an object file
 Button.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Button.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Button.cpp.o
 .PHONY : Button.cpp.o
 
 Button.i: Button.cpp.i
@@ -140,7 +140,7 @@ Button.i: Button.cpp.i
 
 # target to preprocess a source file
 Button.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Button.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Button.cpp.i
 .PHONY : Button.cpp.i
 
 Button.s: Button.cpp.s
@@ -149,7 +149,7 @@ Button.s: Button.cpp.s
 
 # target to generate assembly for a file
 Button.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Button.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Button.cpp.s
 .PHONY : Button.cpp.s
 
 Canvas.o: Canvas.cpp.o
@@ -158,7 +158,7 @@ Canvas.o: Canvas.cpp.o
 
 # target to build an object file
 Canvas.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Canvas.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Canvas.cpp.o
 .PHONY : Canvas.cpp.o
 
 Canvas.i: Canvas.cpp.i
@@ -167,7 +167,7 @@ Canvas.i: Canvas.cpp.i
 
 # target to preprocess a source file
 Canvas.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Canvas.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Canvas.cpp.i
 .PHONY : Canvas.cpp.i
 
 Canvas.s: Canvas.cpp.s
@@ -176,7 +176,7 @@ Canvas.s: Canvas.cpp.s
 
 # target to generate assembly for a file
 Canvas.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Canvas.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Canvas.cpp.s
 .PHONY : Canvas.cpp.s
 
 Events.o: Events.cpp.o
@@ -185,7 +185,7 @@ Events.o: Events.cpp.o
 
 # target to build an object file
 Events.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Events.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Events.cpp.o
 .PHONY : Events.cpp.o
 
 Events.i: Events.cpp.i
@@ -194,7 +194,7 @@ Events.i: Events.cpp.i
 
 # target to preprocess a source file
 Events.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Events.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Events.cpp.i
 .PHONY : Events.cpp.i
 
 Events.s: Events.cpp.s
@@ -203,7 +203,7 @@ Events.s: Events.cpp.s
 
 # target to generate assembly for a file
 Events.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Events.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Events.cpp.s
 .PHONY : Events.cpp.s
 
 Panel.o: Panel.cpp.o
@@ -212,7 +212,7 @@ Panel.o: Panel.cpp.o
 
 # target to build an object file
 Panel.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Panel.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Panel.cpp.o
 .PHONY : Panel.cpp.o
 
 Panel.i: Panel.cpp.i
@@ -221,7 +221,7 @@ Panel.i: Panel.cpp.i
 
 # target to preprocess a source file
 Panel.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Panel.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Panel.cpp.i
 .PHONY : Panel.cpp.i
 
 Panel.s: Panel.cpp.s
@@ -230,7 +230,7 @@ Panel.s: Panel.cpp.s
 
 # target to generate assembly for a file
 Panel.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Panel.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Panel.cpp.s
 .PHONY : Panel.cpp.s
 
 Shape.o: Shape.cpp.o
@@ -239,7 +239,7 @@ Shape.o: Shape.cpp.o
 
 # target to build an object file
 Shape.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Shape.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Shape.cpp.o
 .PHONY : Shape.cpp.o
 
 Shape.i: Shape.cpp.i
@@ -248,7 +248,7 @@ Shape.i: Shape.cpp.i
 
 # target to preprocess a source file
 Shape.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Shape.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Shape.cpp.i
 .PHONY : Shape.cpp.i
 
 Shape.s: Shape.cpp.s
@@ -257,7 +257,7 @@ Shape.s: Shape.cpp.s
 
 # target to generate assembly for a file
 Shape.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Shape.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Shape.cpp.s
 .PHONY : Shape.cpp.s
 
 Widget.o: Widget.cpp.o
@@ -266,7 +266,7 @@ Widget.o: Widget.cpp.o
 
 # target to build an object file
 Widget.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Widget.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Widget.cpp.o
 .PHONY : Widget.cpp.o
 
 Widget.i: Widget.cpp.i
@@ -275,7 +275,7 @@ Widget.i: Widget.cpp.i
 
 # target to preprocess a source file
 Widget.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Widget.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Widget.cpp.i
 .PHONY : Widget.cpp.i
 
 Widget.s: Widget.cpp.s
@@ -284,7 +284,7 @@ Widget.s: Widget.cpp.s
 
 # target to generate assembly for a file
 Widget.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Widget.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Widget.cpp.s
 .PHONY : Widget.cpp.s
 
 Window.o: Window.cpp.o
@@ -293,7 +293,7 @@ Window.o: Window.cpp.o
 
 # target to build an object file
 Window.cpp.o:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Window.cpp.o
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Window.cpp.o
 .PHONY : Window.cpp.o
 
 Window.i: Window.cpp.i
@@ -302,7 +302,7 @@ Window.i: Window.cpp.i
 
 # target to preprocess a source file
 Window.cpp.i:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Window.cpp.i
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Window.cpp.i
 .PHONY : Window.cpp.i
 
 Window.s: Window.cpp.s
@@ -311,7 +311,7 @@ Window.s: Window.cpp.s
 
 # target to generate assembly for a file
 Window.cpp.s:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Window.cpp.s
+	cd /home/julesimf/source/Ded3/JIMP && $(MAKE) -f JG/CMakeFiles/JG.dir/build.make JG/CMakeFiles/JG.dir/Window.cpp.s
 .PHONY : Window.cpp.s
 
 # Help Target
@@ -355,6 +355,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd "/home/julesimf/source/Ded 3/JIMP" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/julesimf/source/Ded3/JIMP && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

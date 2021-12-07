@@ -24,6 +24,7 @@ project(jimp LANGUAGES CXX)
 # set(CMAKE_CXX_COMPILER )
 set(CMAKE_CXX_STANDARD 17)
 set(WARNING_FLAGS "-Wno-multichar -Wno-unused-result -Wno-narrowing")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 #
 # Definitions
@@ -70,6 +71,6 @@ add_executable(jimp
 		plugins/Effect.cpp
 ) 
 
-find_library(JG libJG.a JG)
+find_library(JG libJG.a JG/bin)
 
 target_link_libraries(jimp JG sfml-graphics sfml-window sfml-system dl)

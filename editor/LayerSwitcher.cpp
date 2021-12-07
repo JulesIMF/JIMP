@@ -48,6 +48,11 @@ Layer* LayerSwitcher::getCurrentLayer()
     return getLayer(currentLayer);
 }
 
+int LayerSwitcher::getCurrentLayerIndex()
+{
+    return currentLayer;
+}
+
 bool LayerSwitcher::setLayer(int newCurrentLayer)
 {
     if (newCurrentLayer < 0 || newCurrentLayer >= nLayers())
@@ -84,8 +89,14 @@ int LayerSwitcher::addLayer(int layerWidth, int layerHeight)
 
 void LayerSwitcher::removeLayer(int index)
 {
+    auto oldWidth = layers[index]->width, oldHeight = layers[index]->height;
+
     layers[index]->free();
     layers.erase(layers.begin() + index);
+    if (!nLayers())
+        addLayer(oldWidth, oldHeight);
+
+    currentLayer = std::min(nLayers() - 1, currentLayer);
 }
 
 Layer* LayerSwitcher::getLayer(int index)

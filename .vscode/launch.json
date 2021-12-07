@@ -16,7 +16,7 @@
             "name": "g++ - Сборка и отладка активного файла",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/jimp",
+            "program": "${workspaceFolder}/bin/jimp",
             "args": ["debug/table.bmp"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

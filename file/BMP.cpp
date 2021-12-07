@@ -89,7 +89,7 @@ JG::Color** JIMP::imageToColorBuffer(BMP const& bmp)
             buffer[x][y].r = imageColor[index].b;
             buffer[x][y].g = imageColor[index].g;
             buffer[x][y].b = imageColor[index].r;
-            buffer[x][y].a = imageColor[index].a;
+            buffer[x][y].a = 255;
         }
     }
 

@@ -24,6 +24,7 @@ project(JG LANGUAGES CXX)
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 17)
 set(WARNING_FLAGS "-Wall -Wextra -Werror")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin)
 
 #
 # Definitions

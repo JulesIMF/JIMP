@@ -2,6 +2,7 @@
 obj/
 JG/debug/
 JG/obj/
+*/bin/*
 
 # Prerequisites
 *.d

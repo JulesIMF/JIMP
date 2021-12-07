@@ -45,6 +45,8 @@ namespace JIMP
         void nextLayer();
         void prevLayer();
         Layer* getCurrentLayer();
+        int getCurrentLayerIndex();
+
 
         int addLayer(int layerWidth, int layerHeight);
         Layer* getLayer(int index);

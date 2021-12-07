@@ -54,13 +54,16 @@ namespace JIMP
 
         static int const buttonWidth  = 200,  buttonHeight  = VistaButton::buttonHeight,
                                               switchButtonSize = 32;
-        static int const switchNY     = 2,    switchSpace   = 25,
+        static int const switchNY     = 2,    switchSpace   = 20,
                          switchNX     = 4;
 
         static int const switchWidth  = (switchSpace + switchButtonSize) * switchNX + switchSpace,
                          switchHeight = switchSpace + 
                                         (switchSpace + switchButtonSize) * switchNY + + VistaSlider::VistaThumb::thumbHeight +
                                         switchSpace;
+
+        static int const layerPreviewWidth = 200, layerPreviewHeight = 175,
+                         layerButtonSize = 50;
 
         char const* const pluginsDirName = "./soplugins";
 
@@ -302,6 +305,8 @@ namespace JIMP
                 caption = "Editor canvas";
                 nAdded++;
 
+                bool openedFile = false;
+
                 if (fileName)
                 {
                     FILE* file = fopen(fileName, "r");
@@ -326,12 +331,16 @@ namespace JIMP
                             auto bmpLayer = editorCanvas->layerSwitcher->addLayer(bmp.xSize, bmp.ySize);
                             JIMP::transferColorBuffer(editorCanvas->layerSwitcher->getLayer(bmpLayer)->image, image, bmp.xSize, bmp.ySize);
                             JIMP::deleteColorBuffer(image, bmp.xSize, bmp.ySize);
+                            openedFile = true;
                         }
                     }
                 }
 
-                editorCanvas->layerSwitcher->addLayer(JIMP::UI::editorWidth, JIMP::UI::editorHeight);
-                editorCanvas->layerSwitcher->nextLayer();
+                if (!openedFile) 
+                {
+                    editorCanvas->layerSwitcher->addLayer(JIMP::UI::editorWidth, JIMP::UI::editorHeight);
+                    editorCanvas->layerSwitcher->nextLayer();
+                }
 
                 editorCanvas->editor->mix(editorCanvas->layerSwitcher->getLayerVector());
             }
@@ -465,7 +474,7 @@ namespace JIMP
             void setCaption()
             {
                 free((void*)caption);
-                char const* prefix = "Tool switcher [", 
+                char const* prefix = "[", 
                           * suffix = "]";
                 
                 int size = strlen(prefix) + strlen(suffix) + 1;
@@ -479,6 +488,157 @@ namespace JIMP
 
                 caption = captionConcat;
             }
+        };
+
+        struct LayerSwitcherPanel : public VistaPanel
+        {
+            class LayerSwitch : public VistaButton
+            {
+            public:
+                LayerSwitch(JG::Window* window, int beginX, int beginY, bool next) :
+                    VistaButton(window, beginX, beginY, layerButtonSize),
+                    next(next)
+                {
+                    caption = next ? "Next" : "Prev";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event) override
+                {
+                    if (!activeCanvas)
+                        return JG::Widget::HandlerResponce::Success;
+
+                    if (next)
+                        activeCanvas->layerSwitcher->nextLayer();
+                    
+                    else
+                        activeCanvas->layerSwitcher->prevLayer();                        
+
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                bool next;
+            };
+
+            class LayerCreate : public VistaButton
+            {
+            public:
+                LayerCreate(JG::Window* window, int beginX, int beginY, bool create) :
+                    VistaButton(window, beginX, beginY, layerButtonSize),
+                    create(create)
+                {
+                    caption = create ? "New" : "Delete";
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event) override
+                {
+                    if (!activeCanvas)
+                        return JG::Widget::HandlerResponce::Success;
+
+                    if (create)
+                    {
+                        auto newLayer = activeCanvas->layerSwitcher->addLayer(editorHeight, editorWidth);
+                        activeCanvas->layerSwitcher->setLayer(newLayer);
+                    }
+
+                    else
+                    {
+                        activeCanvas->layerSwitcher->removeLayer(activeCanvas->layerSwitcher->getCurrentLayerIndex());
+                    }
+
+                    return JG::Widget::HandlerResponce::Success;
+                }
+
+            protected:
+                bool create;
+            };
+
+            LayerSwitcherPanel(JG::Window* window) : 
+                VistaPanel(window, windowWidth - (switchSpace * 3 + layerPreviewWidth + layerButtonSize) -
+                                                             VistaPanel::vistaOutline,
+                                                             windowHeight -
+                                                             (switchSpace * 2 + layerPreviewHeight) - 
+                                                             VistaPanel::vistaOutline - 
+                                                             VistaPanel::VistaPanelBar::vistaBarHeight, 
+                                   switchSpace * 3 + layerPreviewWidth + layerButtonSize,
+                                   switchSpace * 2 + layerPreviewHeight)
+            {
+                addChild(previewCanvas = new JG::Canvas(window, switchSpace, switchSpace, layerPreviewWidth, layerPreviewHeight));
+                addChild(new LayerSwitch(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 0, true));
+                addChild(new LayerSwitch(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 1, false));
+                addChild(new LayerCreate(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 2, true));
+                addChild(new LayerCreate(window, switchSpace * 2 + layerPreviewWidth, switchSpace + (switchSpace + buttonHeight) * 3, false));
+            }
+
+            virtual void renderMyself(int shiftX, int shiftY) override
+            {
+                if (activeCanvas)
+                {
+                    auto layer = activeCanvas->layerSwitcher->getCurrentLayer();
+                    double scaleX = double(layer->width) / double(layerPreviewWidth);
+                    double scaleY = double(layer->height) / double(layerPreviewHeight);
+
+                    auto beginX = layer->beginX,
+                         beginY = layer->beginY;
+
+                    auto width  = layer->width,
+                         height = layer->height;
+
+                    for (int x = 0; x != layerPreviewWidth; x++)
+                        for (int y = 0; y != layerPreviewHeight; y++)
+                        {
+                            JG::Color back = (((x >> 2) + (y >> 2)) & 1) ?
+                                JG::Color{ 255, 255, 255, 255 } : // white
+                                JG::Color{ 128, 128, 128, 255 };  // gray
+                            
+                            auto virtualX = int(double(x) * scaleX) - beginX;
+                            auto virtualY = int(double(y) * scaleY) - beginY;
+                            if (0 <= virtualX && virtualX < width && 
+                                0 <= virtualY && virtualY < height)
+                            {
+                                back = mixColors(back, layer->preview[virtualX][virtualY]);
+                            }
+
+                            previewCanvas->setPixel(x, y, back);
+                        }
+                }
+
+                else
+                {
+                    for (int x = 0; x != layerPreviewWidth; x++)
+                        for (int y = 0; y != layerPreviewHeight; y++)
+                            previewCanvas->setPixel(x, y, { 255, 255, 255, 255 });
+                }
+
+                previewCanvas->flush();
+
+                setCaption();
+
+                VistaPanel::renderMyself(shiftX, shiftY);
+            }
+
+            protected:
+                JG::Canvas* previewCanvas;
+                void setCaption()
+                {
+                    free((void*)caption);
+                    
+                    static char buffer[256];
+
+                    if (activeCanvas)
+                        snprintf(buffer, 255, "Layer switcher [%d/%d]", activeCanvas->layerSwitcher->getCurrentLayerIndex() + 1,
+                                                                        activeCanvas->layerSwitcher->nLayers());
+
+                    else
+                        snprintf(buffer, 255, "Layer switcher [none]");
+
+                    int size = strlen(buffer) + 1;
+
+                    char* captionConcat = (char*)calloc(size, sizeof(char));
+                    strcpy(captionConcat, buffer);
+
+                    caption = captionConcat;
+                }
         };
 
         class PalettePanel : public VistaPanel
@@ -743,6 +903,22 @@ namespace JIMP
                 }
             };
 
+            struct LayerItem : public VistaMenuItem
+            {
+                LayerItem(JG::Window* window) :
+                    VistaMenuItem(window, "Layer switcher")
+                {
+
+                }
+
+                virtual JG::Widget::HandlerResponce onClick(JG::Event event) override
+                {
+                    window->addChild(new LayerSwitcherPanel(window));
+                    return JG::Widget::HandlerResponce::Success;
+                }
+            };
+
+
             struct CurvesItem : public VistaMenuItem
             {
                 CurvesItem(JG::Window* window) :
@@ -827,9 +1003,10 @@ namespace JIMP
                 file->setMenu(fileMenu);
 
                 panelsMenu = new VistaMenu(window, panels);
-                panelsMenu->addChild(new PaletteItem(window));
-                panelsMenu->addChild(new SwitcherItem(window));
                 panelsMenu->addChild(new CanvasItem(window));
+                panelsMenu->addChild(new SwitcherItem(window));
+                panelsMenu->addChild(new LayerItem(window));
+                panelsMenu->addChild(new PaletteItem(window));
                 panels->setMenu(panelsMenu);
 
                 correctionMenu = new VistaMenu(window, correction);
@@ -943,6 +1120,7 @@ namespace JIMP
 
                 addChild(new ToolPickerPanel(this));
                 addChild(new PalettePanel(this));
+                addChild(new LayerSwitcherPanel(this));
 
                 addChild(strip = new MainWindowMenuStrip(this));
                 loadPlugins(this, strip);
